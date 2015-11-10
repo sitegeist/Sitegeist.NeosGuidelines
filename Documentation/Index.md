@@ -31,7 +31,6 @@
   * Translations
     * BEM für trans-unit-ids
     * Pro Modul ein XLIFF file
-    * Singular/Plural Geschichte in die Neos Doku zurückspielen
   * Eel & FlowQuery
   * Domänenmodelle
   * API Anbindungen
