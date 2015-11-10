@@ -8,10 +8,10 @@ ausdrücklich willkommen.
 
 ## Inhalte
 
-# [Projektsetup für Flow / Neos](Documentation/Projektsetup.md)
-# [Flow Guidelines](Documentation/Flow.md)
-# [Neos Guidelines](Documentation/Neos.md)
-# [Generalisierung und Veröffentlichung](Documentation/Generalisierung.md)
+* [Projektsetup für Flow / Neos](Documentation/Projektsetup.md)
+* [Flow Guidelines](Documentation/Flow.md)
+* [Neos Guidelines](Documentation/Neos.md)
+* [Generalisierung und Veröffentlichung](Documentation/Generalisierung.md)
 
 ## Regeln für die Doku:
 
