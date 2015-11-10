@@ -1,4 +1,19 @@
-Regeln für die Doku:
+# Sitegeist - Neos Guidelines
+
+Die hier aufgeführten Richtlinien sind nicht als Dogma zu begreifen. Vielmehr wollen wir die Entwicklung und auch die
+Einarbeitung in Neos durch Best-Practices unterstützen. Vorschläge zur Weiterentwicklung dieser Guidelines sind
+ausdrücklich willkommen.
+
+> Der wichtigste Zweck dieser Vorgaben ist es sie künftig durch noch bessere Vorgaben zu ersetzen.
+
+## Inhalte
+
+# [Projektsetup für Flow / Neos](Documentation/Projektsetup.md)
+# [Flow Guidelines](Documentation/Flow.md)
+# [Neos Guidelines](Documentation/Neos.md)
+# [Generalisierung und Veröffentlichung](Documentation/Generalisierung.md)
+
+## Regeln für die Doku:
 
 * Für Code-Beispiele:
   * Vendor.Site für Neos Site Packages
