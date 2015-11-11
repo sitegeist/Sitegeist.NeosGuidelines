@@ -85,7 +85,7 @@ Constraints vollständig im Projekt zu definieren.
     'Vendor.Site:MainStageContent': TRUE
 ```
 
-## Eigene Dokumentenarten (formerly known as Plugins)
+## Eigene Dokumente (NodeTypes)
 
 In Neos wird das erstellen von eigenen Plugins in der regel vermieden. Es werden vielmehr eigene Dokumentenarten
 definiert welche das Datemodell des Kunden abbilden. Hierbei ist vor allem die Traversierbarkeit des entstehenden
@@ -119,7 +119,7 @@ Wichtige Muster am Beispiel von News-Items sind:
       'Vendor.Site:Document': FALSE
 ```
 
-## Alternative Arten Kundendaten in Neos abzubilden
+## Alternative Wege Kundendaten in Neos abzubilden
 
 NodeTypes sind oft, aber nicht immer die beste Art Daten aus der Kundendomäne in Neos abzubilden, die folgenden
 Alternativen können erwogen werden.
