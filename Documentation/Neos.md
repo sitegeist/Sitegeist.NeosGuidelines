@@ -93,10 +93,11 @@ Dokumentenbaumes zu gewährleisten und die Intuitive bedienung durch Redakteuere
 
 Wichtige Muster am Beispiel von News-Items sind:
 
-* Es werden NewsItem und NewsCollection Dokumente definiert
-* Innerhalb einer NewsCollection können die folgenden Dokumente angelegt werden:
-  * NewsItems
-  * NewsCollections: Wenn viele NewsItems zu erwarten sind sollten die NewsCollection weitere NewsCollections enthalten
+* Es werden `NewsItem` und `NewsCollection` Dokumente definiert
+* Innerhalb eines `NewsItems` können keine weiteren Dokumente angelegt werden
+* Innerhalb einer `NewsCollection` können die folgenden Dokumente angelegt werden:
+  * `NewsItems`
+  * `NewsCollections`: Wenn viele `NewsItems` zu erwarten sind sollten die `NewsCollection` weitere `NewsCollections` enthalten
     können um den Redakteueren die Gliederung der Daten zu ermöglichen.
   * Andere Dokumente: ggf. kann es Sinn ergeben die NewsItems auch außerhalb der Collection zu nutzen
 
