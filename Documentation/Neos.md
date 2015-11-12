@@ -16,7 +16,7 @@ Constraints vollständig im Projekt zu definieren.
 ##
 # declare the base document types as abstract
 
-'TYPO3.Neos:Page':
+'TYPO3.Neos.NodeTypes:Page':
   abstract: TRUE
 
 'TYPO3.Neos:Shortcut':
@@ -33,7 +33,7 @@ Constraints vollständig im Projekt zu definieren.
 
 'Vendor.Site:Page':
   superTypes:
-    'TYPO3.Neos:Page': TRUE
+    'TYPO3.Neos.NodeTypes:Page': TRUE
     'Vendor.Site:Document' : TRUE
   childNodes:
     main:
