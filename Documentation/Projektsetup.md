@@ -9,7 +9,7 @@ curl -sS https://getcomposer.org/installer | php
 sudo mv composer.phar /usr/local/bin/composer
 ```
 
-Um ein Neos-Projekt in der aktuellsten stabilen Version von Neos zu starten, kannst Du folgenden Befehl verwenden (wobei ``Vendor.Site`` durch den entsprechenden Projekt-Namen zu ersetzen wäre):
+Um ein Neos-Projekt in der aktuellsten stabilen Version von Neos zu starten, kannst Du folgenden Befehl verwenden (wobei ``Vendor.Site`` durch den entsprechenden Package Namespace des Projektes zu ersetzen wäre):
 
 ```sh
 composer create-project typo3/neos-base-distribution Vendor.Site
