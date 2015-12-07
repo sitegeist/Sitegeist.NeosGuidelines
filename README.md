@@ -9,6 +9,7 @@ ausdrücklich willkommen.
 ## Inhalte
 
 * [Projektsetup für Flow / Neos](Documentation/Projektsetup.md)
+* [Hosting Requirements für Flow / Neos](Documentation/Hosting-Requirements.md)
 * [Flow Guidelines](Documentation/Flow.md)
 * [Neos Guidelines](Documentation/Neos.md)
 * [Generalisierung und Veröffentlichung](Documentation/Generalisierung.md)
