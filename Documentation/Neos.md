@@ -89,7 +89,7 @@ Constraints vollständig im Projekt zu definieren.
 
 In Neos wird das erstellen von eigenen Plugins in der Regel vermieden, es werden vielmehr eigene Dokumentenarten
 definiert welche das Datemodell des Kunden abbilden. Hierbei ist vor allem die Traversierbarkeit des entstehenden
-Dokumentenbaumes zu gewährleisten und die Intuitive Bedienung durch Redakteuere sicherzustellen.
+Dokumentenbaumes zu gewährleisten und die intuitive Bedienung durch Redakteuere sicherzustellen.
 
 Wichtige Muster am Beispiel von News-Items sind:
 
@@ -118,6 +118,23 @@ Wichtige Muster am Beispiel von News-Items sind:
     nodeTypes:
       'Vendor.Site:Document': FALSE
 ```
+
+Zur Unterscheidung zwischen Content- und Document-Nodes gilt die Regel 
+"alles was selektiert oder verlinkt wird ist ein Dokument". So kann beispielsweise ein 
+Author als Dokument abgebildet werden auch wenn zum aktuellen Zeitpunkt nicht geplant 
+ist diesen auch im Frontend zu verlinken. Durch ein entsprechendes Rendering des 
+Dokumentes kann dennoch im Backend eine direkte Pflege der Daten ermöghlicht werden. 
+
+## Datenpflege
+
+Die primäre Pflege der Daten findet in Neos inline im Dokument statt, lediglich 
+Informationen die keine direkte visuelle Repräsentation auf dem jeweiligen Dokument haben 
+werden im Inspektor gepflegt.
+
+* Inline Bearbeitung hat Vorrang vor dem Inspektor. Dabei wird soweit möglich auf HTML-Formatierung verzichtet.
+* Einzelne zusätzliche Eigenschaften können den vorhandenen Gruppen hinzugefügt werden
+* Werden mehrere Eigenschaften hinzugefügt muss eine Gruppe oder ein Tab definierzt werden.
+* Es ist nicht sinnvoll in einem Dokument mehr als 5 Tabs zu nutzen.
 
 ## Alternative Wege Kundendaten in Neos abzubilden
 
