@@ -109,9 +109,9 @@ Wichtige Muster am Beispiel von News-Items sind:
     nodeTypes:
       'Vendor.Site:Document' : FALSE
       'Vendor.Site:NewsCollection' : TRUE
-      'Vendor.Site:News' : TRUE
+      'Vendor.Site:NewsItem' : TRUE
 
-'Vendor.Site:News':
+'Vendor.Site:NewsItem':
   superTypes:
     'Vendor.Site:Page': TRUE
   constraints:
@@ -167,13 +167,13 @@ aufgebaut sind.
 - `Bundles/(__Name__)/(NodeTypes|DocumentTypes|TypoScriptObjects)` : optionaler Ordner zur thematischen Gruppierung von TypoScript
 
 ```
-prototype(Vendor.Site:News) < prototype(Vendor.Site:Page) {
+prototype(Vendor.Site:NewsItem) < prototype(Vendor.Site:Page) {
     # ...
 }
 
 root.isVendorSiteNews {
-  condition = ${q(node).is('[instanceof Vendor.Site:News]')}
-  type = Vendor.Site:News
+  condition = ${q(node).is('[instanceof Vendor.Site:NewsItem]')}
+  type = Vendor.Site:NewsItem
   @position = 'before layout'
 }
 ```
@@ -196,5 +196,3 @@ Offene Diskussion:
   * Abgrenzung child nodes <-> properties
   * Plugins: Modus Operandi
   * Inspector: Gruppen und Tabs
-  
-  
