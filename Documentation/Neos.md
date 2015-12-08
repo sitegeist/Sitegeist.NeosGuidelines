@@ -165,7 +165,7 @@ Abgrenzung der verschiedenen Methoden nach möglichen Features
 
 * Jeder Prototyp ist in einer eigenen .ts2 Datei.
 * In aller Regel wird die Definition von Prototypen TypoScript-Pfaden bevorzugt! 
-* Alle Typprüfungen nutzen `instanceof` um auch bei abgeleiteten Typen zu funktioniern.
+* Alle Prüfungen auf NodeTypes nutzen `instanceof` um auch bei abgeleiteten Typen zu funktioniern.
 * Prototypen für Nodes liegen in den Ordnern NodeTypes oder DocumentTypes und tragen den Namen des NodeTypes
 * Thematisch zusammenhängende Definitionen können in Bundles zusammengfasst werden
 
