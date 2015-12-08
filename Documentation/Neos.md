@@ -3,7 +3,7 @@
 ## Allgemeine Regeln zur Definition von NodeTypes:
 
 * Jeder NodeType und jedes Mixin ist in einer eigenen yaml-Datei definiert
-* Die Datei trägt den Namen `NodeTypes.{Document/Content/Mixin}.{Name des NodeTypes ohne Punkte}.yaml`
+* Die Datei trägt den Namen `NodeTypes.{Document|Content|Mixin}.{Name des NodeTypes ohne Punkte}.yaml`
 * Die Constraints können zentral in die Dateien  `NodeTypes.Constraints.Documents.yaml` bzw.
   `NodeTypes.Constraints.Content.yaml` definiert werden
 
@@ -87,31 +87,31 @@ Constraints vollständig im Projekt zu definieren.
 
 ## Eigene Dokumente (NodeTypes)
 
-In Neos wird das erstellen von eigenen Plugins in der regel vermieden. Es werden vielmehr eigene Dokumentenarten
+In Neos wird das erstellen von eigenen Plugins in der Regel vermieden, es werden vielmehr eigene Dokumentenarten
 definiert welche das Datemodell des Kunden abbilden. Hierbei ist vor allem die Traversierbarkeit des entstehenden
-Dokumentenbaumes zu gewährleisten und die Intuitive bedienung durch Redakteuere sicherzustellen.
+Dokumentenbaumes zu gewährleisten und die intuitive Bedienung durch Redakteuere sicherzustellen.
 
 Wichtige Muster am Beispiel von News-Items sind:
 
-* Es werden `NewsItem` und `NewsCollection` Dokumente definiert
+* Es werden `NewsItem` und `NewsCollection` als Dokumente definiert
 * Innerhalb eines `NewsItems` können keine weiteren Dokumente angelegt werden
 * Innerhalb einer `NewsCollection` können die folgenden Dokumente angelegt werden:
   * `NewsItems`
   * `NewsCollections`: Wenn viele `NewsItems` zu erwarten sind sollten die `NewsCollection` weitere `NewsCollections` enthalten
     können um den Redakteueren die Gliederung der Daten zu ermöglichen.
-  * Andere Dokumente: ggf. kann es Sinn ergeben die NewsItems auch außerhalb der Collection zu nutzen
+* ggf. kann es Sinn ergeben die NewsItems auch außerhalb der Collection zu nutzen
 
 ```yaml
-'Vendor.Site:ItemCollection':
+'Vendor.Site:NewsCollection':
   superTypes:
     'Vendor.Site:Page': TRUE
   constraints:
     nodeTypes:
       'Vendor.Site:Document' : FALSE
-      'Vendor.Site:ItemCollection' : TRUE
-      'Vendor.Site:Item' : TRUE
+      'Vendor.Site:NewsCollection' : TRUE
+      'Vendor.Site:NewsItem' : TRUE
 
-'Vendor.Site:Item':
+'Vendor.Site:NewsItem':
   superTypes:
     'Vendor.Site:Page': TRUE
   constraints:
@@ -119,30 +119,93 @@ Wichtige Muster am Beispiel von News-Items sind:
       'Vendor.Site:Document': FALSE
 ```
 
+Zur Unterscheidung zwischen Content- und Document-Nodes gilt die Regel 
+"alles was selektiert oder verlinkt wird ist ein Dokument". So kann beispielsweise ein 
+Author als Dokument abgebildet werden auch wenn zum aktuellen Zeitpunkt nicht geplant 
+ist diesen auch im Frontend zu verlinken. Durch ein entsprechendes Rendering des 
+Dokumentes kann dennoch im Backend eine direkte Pflege der Daten ermöghlicht werden. 
+
+## Datenpflege
+
+Die primäre Pflege der Daten findet in Neos inline im Dokument statt, lediglich 
+Informationen die keine direkte visuelle Repräsentation auf dem jeweiligen Dokument haben 
+werden im Inspektor gepflegt.
+
+* Inline Bearbeitung hat Vorrang vor dem Inspektor. Dabei wird soweit möglich auf HTML-Formatierung verzichtet.
+* Einzelne zusätzliche Eigenschaften können den vorhandenen Gruppen hinzugefügt werden
+* Werden mehrere Eigenschaften hinzugefügt muss eine Gruppe oder ein Tab definierzt werden.
+* Es ist nicht sinnvoll in einem Dokument mehr als 5 Tabs zu nutzen.
+
 ## Alternative Wege Kundendaten in Neos abzubilden
 
 NodeTypes sind oft, aber nicht immer die beste Art Daten aus der Kundendomäne in Neos abzubilden, die folgenden
 Alternativen können erwogen werden.
 
 * Mit dem Content Repository:
-  * Custom NodeTypes
+  * Custom NodeTypes (siehe oben)
 * Ohne Content Repository:
-  * Flow Domänenobjekte, ggf. mit BackendMmodulen und ContentPlugins
+  * Flow Domänenobjekte, ggf. mit BackendModulen und ContentPlugins
 * Mischformen mit dem ContentRepository:
   * Dokumente mit eigener Implementierung der NodeType-Klasse
   * Dokumente als ContentObjectProxy ... einzelne Properties eines Dokumentes werden transparent an ein hinterlegtes
     Flow-Domänenmodell durchgereicht
   * Indizieren externer Daten mit ElasticSearch und Traversieren als virtuelle CR-Nodes
 
-Abgrenzung verschiedenen Methoden
+Abgrenzung der verschiedenen Methoden nach möglichen Features
 
-|                   | Custom NodeTypes | Flow Domänenobjekte | NodeType-Klasse | ContentObjectProxy | ElasticSearch virtuelle Nodes |
-| ----------------- | ---------------- | ------------------- | --------------- | ------------------ | ------------------------------|
-| ContentDimensions |     JA           | NEIN                | JA              | TEILWEISE          | TEILWEISE                     |
-|                   |                  |                     |                 |                    |                               |
-|                   |                  |                     |                 |                    |                               |
+|                     | Custom NodeTypes | Flow Domänenobjekte | NodeType-Klasse | ContentObjectProxy | ElasticSearch virtuelle Nodes |
+| ------------------- | ---------------- | ------------------- | --------------- | ------------------ | ------------------------------|
+| ContentDimensions   | JA               | NEIN                | JA              | TEILWEISE          | TEILWEISE                     |
+| Domänenübergreifend | NEIN             | JA                  | NEIN            | TEILWEISE          | NEIN                          |
+|                     |                  |                     |                 |                    |                               |
 
+# TypoScript
 
+## Allgemeine Regeln für TypoScript
+
+* Jeder Prototyp ist in einer eigenen .ts2 Datei.
+* In aller Regel wird die Definition von Prototypen TypoScript-Pfaden bevorzugt! 
+* Alle Prüfungen auf NodeTypes nutzen `instanceof` um auch bei abgeleiteten Typen zu funktioniern.
+* Prototypen für Nodes liegen in den Ordnern NodeTypes oder DocumentTypes und tragen den Namen des NodeTypes
+* Thematisch zusammenhängende Definitionen können in Bundles zusammengfasst werden
+
+### Dateistruktur in Resources/Private/TypoScript:
+
+Die Dateistruktur der TypoScripte gliedert sich primär danach ob Content- oder 
+Document-Nodes der Gegenstand des jeweiligen Scriptes sind. Alles andere wandert 
+in den Ordner `TypoScriptObjects`. Thematisch zusammenhängende Definitionen können 
+dabei in Bundles zusammengefasst werden welche intern analog zum TypoScript-Ordner 
+aufgebaut sind.
+
+- `Root.ts` : Haupteinstiegspunkt für das Rendering. Das Script definiert `/page` und bindet die anderen TypoScripts über Includes ein.
+- `NodeTypes/*.ts2` : Prototypen für Content Nodes aus dem Content Repository
+- `DocumentTypes/*.ts2` : Prototypen für Document Nodes aus dem Content Repository sowie eine root.renderingCondition
+- `TypoScriptObjects/*.ts2` : nodeunabhängige Prototypen für Menüs etc.
+- `Bundles/(__Name__)/(NodeTypes|DocumentTypes|TypoScriptObjects)` : optionaler Ordner zur thematischen Gruppierung von TypoScript
+
+```
+prototype(Vendor.Site:NewsItem) < prototype(Vendor.Site:Page) {
+    # ...
+}
+
+root.isVendorSiteNews {
+  condition = ${q(node).is('[instanceof Vendor.Site:NewsItem]')}
+  type = Vendor.Site:NewsItem
+  @position = 'before layout'
+}
+```
+
+# Templates
+
+## Dateistruktur in Resources/Private/Templates:
+
+Die Dateistruktur der Templates spiegelt den Aufbau der TypoScript-Struktur. Wann 
+immer möglich sollte ein Template denselben Pfad wie das TypoScript des Prototypen haben. 
+
+- `NodeTypes` : Templates für Content-Nodes
+- `DocumentTypes` : Templates für Document-Nodes
+- `TypoScriptObjects` : Templates für nodeunabhängige Module
+- `Bundles/(__Name__)/(NodeTypes|DocumentTypes|TypoScriptObjects)` : thematische Gruppe von Templates
 
 Offene Diskussion:
   * TypoScript
