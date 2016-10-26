@@ -18,16 +18,14 @@ class GuidelinesCommandController extends CommandController
     /**
      * Validate the current project against the Sitegeist Neos Guidelines
      *
-     * @return bool
+     * @return void
      */
     public function validateCommand() 
     {
 
         if (!$this->editorConfigExits()) {
-            throw new Exception('No Editorconfig found in the root directory of the project');
+            throw new \Exception('No Editorconfig found in the root directory of the project');
         }
-            
-            return true;
     }
     
     
@@ -38,6 +36,14 @@ class GuidelinesCommandController extends CommandController
      */
     private function editorConfigExits() 
     {
-        return true;        
+        /* Caution only works if flow is called from root directory */
+        $rootDir = getcwd();
+        $editorConfig = $rootDir . '/.editorconfig';
+
+        if (file_exists($editorConfig)) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }
