@@ -2,6 +2,14 @@
     "name": "sitegeist/neosguidelines",
     "type": "typo3-flow-package",
     "description": "Add description here",
+    "version": "0.0.1",
+    "authors": [
+        {
+            "name": "Max Strübing",
+            "email": "struebing@sitegeist.de",
+            "role": "Developer"
+        },
+    ],
     "require": {
         "typo3/flow": "*"
     },
