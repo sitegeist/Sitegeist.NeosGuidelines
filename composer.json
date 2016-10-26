@@ -8,7 +8,7 @@
             "name": "Max Strübing",
             "email": "struebing@sitegeist.de",
             "role": "Developer"
-        },
+        }
     ],
     "require": {
         "typo3/flow": "*"
