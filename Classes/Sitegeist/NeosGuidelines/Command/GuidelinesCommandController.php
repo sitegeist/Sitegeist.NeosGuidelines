@@ -30,11 +30,15 @@ class GuidelinesCommandController extends CommandController
     public function validateCommand() 
     {
         if (!$this->fileUtilities->fileExists('.editorconfig')) {
-            throw new \Exception('No Editorconfig found in the root directory of the project');
+            throw new \Exception('No Editorconfig found in the root directory of the project.');
         }
 
         if (!$this->fileUtilities->fileIsInVCS('composer.lock')) {
-            throw new \Exception('No composer.lock found in your git repo');
+            throw new \Exception('No composer.lock found in your git repository.');
+        }
+
+        if (!$this->fileUtilities->fileExists('README.md')) {
+            throw new \Exception('No README.md found in the root directory of the project.');
         }
     }
     
