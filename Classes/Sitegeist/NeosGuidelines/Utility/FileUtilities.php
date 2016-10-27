@@ -10,15 +10,25 @@ class FileUtilities
 {
 
     /**
+     * Composes fileExists and fileIsInVCS
+     *
+     * @param $fileName
+     * @return boolean
+     *
+     */
+    public function fileExistsAndIsInVCS($fileName) {
+        $file = $this->getRootDir() . $fileName;
+        return $this->fileExists($file) && $this->fileIsInVCS($file);
+    }
+
+    /**
      * Checks if a file exists
      *
      * @param string $fileName
      * @return boolean
      */
     public function fileExists($fileName) {
-        $file = $this->getRootDir() . '/' . $fileName;
-
-        return file_exists($file);
+        return file_exists($fileName);
     }
 
     /**
@@ -28,16 +38,13 @@ class FileUtilities
      * @return boolean
      */
     public function fileIsInVCS($fileName) {
-        $file = $this->getRootDir() . '/' . $fileName;
-        $value = intval(shell_exec('git ls-files ' . $file . ' --error-unmatch; echo $?'));
+        $value = intval(shell_exec('git ls-files ' . $fileName . ' --error-unmatch &>/dev/null; echo $?'));
 
         return $value === 0;
     }
 
     /**
-     * get the root dir of the project
-     *
-     * CAUTION currently only working when called from root dir
+     * Gets the root dir of the project
      *
      * @return string
      */
