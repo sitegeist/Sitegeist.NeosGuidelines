@@ -16,6 +16,8 @@ Add this repository to your composer.json
     }],
 ```
 
+and run `composer require --dev sitegeist/neosguidelines:dev-master`
+
 This will give you a new flow-command `guidelines:validate`
 --> `./flow guidelines:validate`
 
