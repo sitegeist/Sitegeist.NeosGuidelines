@@ -23,8 +23,8 @@ This will give you a new flow-command `guidelines:validate`
 
 ## Guidelines
 
-Currently it is checked if a `README.md`, `composer.lock` and `.editorconfig` file exists and is versioned via git.
-Also it is checked if the `README.md` contains the following sections(headlines(#)):
+Currently this command checks if a `README.md`, `composer.lock` and `.editorconfig` file exists and is under vcs via git.
+Also it checks if the `README.md` contains the following sections(headlines(#)):
 * Installation
 * Deployment
 * Versionskontrolle
