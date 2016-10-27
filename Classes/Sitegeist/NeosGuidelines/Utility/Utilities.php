@@ -15,7 +15,8 @@ class Utilities
      * @param string $fileName
      * @return boolean
      */
-    public function fileExistsAndIsInVCS($fileName) {
+    public function fileExistsAndIsInVCS($fileName)
+    {
         $file = $this->getAbsolutFilePath($fileName);
         return $this->fileExists($file) && $this->fileIsInVCS($file);
     }
@@ -27,7 +28,8 @@ class Utilities
      * @param string $fileName
      * @return string
      */
-    public function getAbsolutFilePath($fileName) {
+    public function getAbsolutFilePath($fileName)
+    {
         return $this->getRootDir() . $fileName;
     }
 
@@ -37,7 +39,8 @@ class Utilities
      * @param array $readme
      * @return array
      */
-    public function getReadmeSections($readme) {
+    public function getReadmeSections($readme)
+    {
         $normalizedReadme = array();
 
         foreach ($readme as $readmeLine) {
@@ -59,7 +62,8 @@ class Utilities
      * @param string $sub
      * @return boolean
      */
-    private function beginsWith($str, $sub) {
+    private function beginsWith($str, $sub)
+    {
         $str = trim($str);
         $sub = trim($sub);
         return (substr($str, 0, strlen($sub)) === $sub);
@@ -71,7 +75,8 @@ class Utilities
      * @param string $fileName
      * @return boolean
      */
-    private function fileExists($fileName) {
+    private function fileExists($fileName)
+    {
         return file_exists($fileName);
     }
 
@@ -81,7 +86,8 @@ class Utilities
      * @param string $fileName
      * @return boolean
      */
-    private function fileIsInVCS($fileName) {
+    private function fileIsInVCS($fileName)
+    {
         $value = intval(shell_exec('git ls-files ' . $fileName . ' --error-unmatch &>/dev/null; echo $?'));
 
         return $value === 0;
@@ -92,7 +98,8 @@ class Utilities
      *
      * @return string
      */
-    private function getRootDir() {
+    private function getRootDir()
+    {
         return FLOW_PATH_ROOT;
     }
 }

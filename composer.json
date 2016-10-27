@@ -22,6 +22,6 @@
         "squizlabs/php_codesniffer": "^2.7"
     },
     "scripts": {
-        "lint": "phpcs Classes/Sitegeist/NeosGuidelines/**"
+        "lint": "phpcs --standard=PSR2 Classes/Sitegeist/NeosGuidelines/**"
     }
 }

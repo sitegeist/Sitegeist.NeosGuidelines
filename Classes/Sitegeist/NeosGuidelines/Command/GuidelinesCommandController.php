@@ -40,12 +40,12 @@ class GuidelinesCommandController extends CommandController
      *
      * @return void
      */
-    public function validateCommand() 
+    public function validateCommand()
     {
         
         $files = array(
-            self::EDITORCONFIG, 
-            self::COMPOSER_LOCK, 
+            self::EDITORCONFIG,
+            self::COMPOSER_LOCK,
             self::README
         );
 
@@ -57,8 +57,10 @@ class GuidelinesCommandController extends CommandController
 
         foreach ($files as $file) {
             if (!$this->utilities->fileExistsAndIsInVCS($file)) {
-                throw new \Exception('No ' . $file . ' found in your project. 
-                    If this file is there check if it is in your VCS.');
+                throw new \Exception(
+                    'No ' . $file . ' found in your project. 
+                    If this file is there check if it is in your VCS.'
+                );
             }
         }
         
@@ -66,7 +68,9 @@ class GuidelinesCommandController extends CommandController
         $readme = $this->utilities->getReadmeSections($readme);
         foreach ($readmeSections as $readmeSection) {
             if (!in_array($readmeSection, $readme)) {
-                throw new \Exception('No ' . $readmeSection . ' section found in your README.md.');
+                throw new \Exception(
+                    'No ' . $readmeSection . ' section found in your README.md.'
+                );
             }
         }
     }
