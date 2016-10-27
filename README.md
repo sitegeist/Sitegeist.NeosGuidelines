@@ -27,4 +27,4 @@ Currently it is checked if a `README.md`, `composer.lock` and `.editorconfig` fi
 Also it is checked if the `README.md` contains the following sections(headlines(#)):
 * Installation
 * Deployment
-* Versionskontroller
+* Versionskontrolle
