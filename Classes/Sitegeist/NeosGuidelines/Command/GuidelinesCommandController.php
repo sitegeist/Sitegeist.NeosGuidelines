@@ -37,7 +37,8 @@ class GuidelinesCommandController extends CommandController
 
         foreach ($files as $file) {
             if (!$this->fileUtilities->fileExistsAndIsInVCS($file)) {
-                throw new \Exception('No ' . $file . ' found in your project. If this file is there check if it is in your VCS.');
+                throw new \Exception('No ' . $file . ' found in your project. 
+                    If this file is there check if it is in your VCS.');
             }
         }
         
