@@ -42,7 +42,7 @@ class GuidelinesCommandController extends CommandController
             }
         }
         
-        $readme = file(FLOW_PATH_ROOT . self::README);
+        $readme = file($this->fileUtilities->getAbsolutFilePath(self::README));
         if (!in_array("# Installation\n", $readme)) {
             throw new \Exception('No Installation section found in your README.md.');
         } else if (!in_array("# Versionskontrolle\n", $readme)) {

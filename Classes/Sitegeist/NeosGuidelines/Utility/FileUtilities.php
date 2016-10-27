@@ -12,13 +12,23 @@ class FileUtilities
     /**
      * Composes fileExists and fileIsInVCS
      *
-     * @param $fileName
+     * @param string $fileName
      * @return boolean
-     *
      */
     public function fileExistsAndIsInVCS($fileName) {
-        $file = $this->getRootDir() . $fileName;
+        $file = $this->getAbsolutFilePath($fileName);
         return $this->fileExists($file) && $this->fileIsInVCS($file);
+    }
+
+    
+    /**
+     * Returns the absolut path of a file
+     *
+     * @param string $fileName
+     * @return string
+     */
+    public function getAbsolutFilePath($fileName) {
+        return $this->getRootDir() . $fileName;
     }
 
     /**
@@ -27,7 +37,7 @@ class FileUtilities
      * @param string $fileName
      * @return boolean
      */
-    public function fileExists($fileName) {
+    private function fileExists($fileName) {
         return file_exists($fileName);
     }
 
@@ -37,7 +47,7 @@ class FileUtilities
      * @param string $fileName
      * @return boolean
      */
-    public function fileIsInVCS($fileName) {
+    private function fileIsInVCS($fileName) {
         $value = intval(shell_exec('git ls-files ' . $fileName . ' --error-unmatch &>/dev/null; echo $?'));
 
         return $value === 0;
