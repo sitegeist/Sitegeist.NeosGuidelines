@@ -17,5 +17,11 @@
         "psr-0": {
             "Sitegeist\\NeosGuidelines": "Classes"
         }
+    },
+    "require-dev": {
+        "squizlabs/php_codesniffer": "^2.7"
+    },
+    "scripts": {
+        "lint": "phpcs Classes/Sitegeist/NeosGuidelines/**"
     }
 }
