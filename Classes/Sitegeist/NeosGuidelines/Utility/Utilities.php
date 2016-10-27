@@ -5,8 +5,8 @@ namespace Sitegeist\NeosGuidelines\Utility;
  * This script belongs to the TYPO3 Flow package "Sitegeist.NeosGuidelines".   *
  *                                                                        *
  *                                                                        */
- 
-class FileUtilities
+
+class Utilities
 {
 
     /**
@@ -20,7 +20,7 @@ class FileUtilities
         return $this->fileExists($file) && $this->fileIsInVCS($file);
     }
 
-    
+
     /**
      * Returns the absolut path of a file
      *
@@ -29,6 +29,40 @@ class FileUtilities
      */
     public function getAbsolutFilePath($fileName) {
         return $this->getRootDir() . $fileName;
+    }
+
+    /*
+     * Normalize the Readme-sections - remove # and whitespace
+     *
+     * @param array $readme
+     * @return array
+     */
+    public function getReadmeSections($readme) {
+        $normalizedReadme = array();
+
+        foreach ($readme as $readmeLine) {
+            if ($this->beginsWith($readmeLine, '#')) {
+                // Remove all starting #, any amount of whitespace
+                // capture any word character and remove trailing whitespace
+                $readmeLine = preg_replace('/^#*\s*(\w+)\s*$/', '${1}', $readmeLine);
+                array_push($normalizedReadme, $readmeLine);
+            }
+        }
+
+        return $normalizedReadme;
+    }
+
+    /*
+     * Checks if a string begins with a specific substr
+     *
+     * @param string $str
+     * @param string $sub
+     * @return boolean
+     */
+    private function beginsWith($str, $sub) {
+        $str = trim($str);
+        $sub = trim($sub);
+        return (substr($str, 0, strlen($sub)) === $sub);
     }
 
     /**

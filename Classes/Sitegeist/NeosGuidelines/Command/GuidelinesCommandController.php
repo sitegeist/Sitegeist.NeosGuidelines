@@ -15,15 +15,25 @@ use TYPO3\Flow\Cli\CommandController;
 class GuidelinesCommandController extends CommandController
 {
     
+    /*
+     * Files which are mandatory in the repo
+     */
     const EDITORCONFIG = '.editorconfig';
     const COMPOSER_LOCK = 'composer.lock';
     const README = 'README.md';
 
+    /*
+     * Sections which are mandatory in the README file
+     */
+    const SETUP = 'Installation';
+    const VCS = 'Versionskontrolle';
+    const DEPLOYMENT = 'Deployment';
+
     /**
      * @Flow\Inject
-     * @var \Sitegeist\NeosGuidelines\Utility\FileUtilities
+     * @var \Sitegeist\NeosGuidelines\Utility\Utilities
      */
-    protected $fileUtilities;
+    protected $utilities;
 
     /**
      * Validate the current project against the Sitegeist Neos Guidelines
@@ -33,24 +43,31 @@ class GuidelinesCommandController extends CommandController
     public function validateCommand() 
     {
         
-        $files = array(self::EDITORCONFIG, self::COMPOSER_LOCK, self::README);
+        $files = array(
+            self::EDITORCONFIG, 
+            self::COMPOSER_LOCK, 
+            self::README
+        );
+
+        $readmeSections = array(
+            self::SETUP,
+            self::VCS,
+            self::DEPLOYMENT
+        );
 
         foreach ($files as $file) {
-            if (!$this->fileUtilities->fileExistsAndIsInVCS($file)) {
+            if (!$this->utilities->fileExistsAndIsInVCS($file)) {
                 throw new \Exception('No ' . $file . ' found in your project. 
                     If this file is there check if it is in your VCS.');
             }
         }
         
-        $readme = file($this->fileUtilities->getAbsolutFilePath(self::README));
-        if (!in_array("# Installation\n", $readme)) {
-            throw new \Exception('No Installation section found in your README.md.');
-        } else if (!in_array("# Versionskontrolle\n", $readme)) {
-            throw new \Exception('No Versionskontrolle section found in your README.md.');
-        } else if (!in_array("# Deployment\n", $readme)) {
-            throw new \Exception('No Deployment section found in your README.md.');
+        $readme = file($this->utilities->getAbsolutFilePath(self::README));
+        $readme = $this->utilities->getReadmeSections($readme);
+        foreach ($readmeSections as $readmeSection) {
+            if (!in_array($readmeSection, $readme)) {
+                throw new \Exception('No ' . $readmeSection . ' section found in your README.md.');
+            }
         }
-
     }
-
 }
