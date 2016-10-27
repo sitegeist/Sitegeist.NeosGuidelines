@@ -15,7 +15,6 @@ use TYPO3\Flow\Cli\CommandController;
 class GuidelinesCommandController extends CommandController
 {
 
-
     /**
      * @Flow\Inject
      * @var \Sitegeist\NeosGuidelines\Utility\FileUtilities
@@ -29,6 +28,7 @@ class GuidelinesCommandController extends CommandController
      */
     public function validateCommand() 
     {
+
         if (!$this->fileUtilities->fileExists('.editorconfig')) {
             throw new \Exception('No Editorconfig found in the root directory of the project.');
         }
@@ -40,6 +40,16 @@ class GuidelinesCommandController extends CommandController
         if (!$this->fileUtilities->fileExists('README.md')) {
             throw new \Exception('No README.md found in the root directory of the project.');
         }
+
+        $readme = file('README.md');
+        if (!in_array("# Installation\n", $readme)) {
+            throw new \Exception('No Installation section found in your README.md.');
+        } else if (!in_array("# Versionskontrolle\n", $readme)) {
+            throw new \Exception('No Versionskontrolle section found in your README.md.');
+        } else if (!in_array("# Deployment\n", $readme)) {
+            throw new \Exception('No Deployment section found in your README.md.');
+        }
+
     }
     
     

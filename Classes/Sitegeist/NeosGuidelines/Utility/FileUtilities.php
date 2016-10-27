@@ -42,6 +42,6 @@ class FileUtilities
      * @return string
      */
     private function getRootDir() {
-        return getcwd();
+        return FLOW_PATH_ROOT;
     }
 }
