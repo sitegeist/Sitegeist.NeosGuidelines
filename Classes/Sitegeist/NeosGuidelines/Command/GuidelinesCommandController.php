@@ -69,7 +69,7 @@ class GuidelinesCommandController extends CommandController
         foreach ($readmeSections as $readmeSection) {
             if (!in_array($readmeSection, $readme)) {
                 throw new \Exception(
-                    'No ' . $readmeSection . ' section found in your README.md.'
+                    'No ' . $readmeSection . ' section found in your ' . self::README . '.'
                 );
             }
         }
