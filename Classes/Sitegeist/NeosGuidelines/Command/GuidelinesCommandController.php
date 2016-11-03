@@ -42,7 +42,6 @@ class GuidelinesCommandController extends CommandController
      */
     public function validateCommand()
     {
-        
         $files = array(
             self::EDITORCONFIG,
             self::COMPOSER_LOCK,
@@ -54,6 +53,8 @@ class GuidelinesCommandController extends CommandController
             self::VCS,
             self::DEPLOYMENT
         );
+
+        $this->lintJavascript();
 
         foreach ($files as $file) {
             if (!$this->utilities->fileExistsAndIsInVCS($file)) {
@@ -73,5 +74,31 @@ class GuidelinesCommandController extends CommandController
                 );
             }
         }
+    }
+
+    private function lintJavascript()
+    {
+        $versionedPackageJsons = explode("\n", shell_exec('git ls-tree -r master --name-only | grep package.json'));
+        $lintCommand = 'npm run lint &> /dev/null';
+        
+        foreach ($versionedPackageJsons as $packageJSON) {
+            if ($packageJSON) {
+                $packageJSONPath = substr($packageJSON, 0, strlen($packageJSON) - strlen('package.json'));
+                if ($packageJSONPath) {
+                    $command = 'cd ' . $packageJSONPath . ' && ' . $lintCommand;
+                    system($command, $lintValue);
+                } else {
+                    system($lintCommand, $lintValue);
+                }
+
+                if ($lintValue != 0) {
+                    throw new \Exception(
+                        'The command: "' . $command . '" returned a non zero exit value'
+                    );
+                }
+            }
+        }
+
+        return;
     }
 }
