@@ -18,7 +18,7 @@ Add this repository to your composer.json
 
 and run `composer require --dev sitegeist/neosguidelines:dev-master`
 
-This will give you the folling new flow-commands
+This will give you the folling new flow-commands  
 --> `./flow guidelines:validate`  
 --> `./flow guidelines:lintphp`  
 --> `./flow guidelines:lintjavascript`  
