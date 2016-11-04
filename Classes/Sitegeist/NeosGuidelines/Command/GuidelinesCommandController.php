@@ -29,6 +29,14 @@ class GuidelinesCommandController extends CommandController
     const VCS = 'Versionskontrolle';
     const DEPLOYMENT = 'Deployment';
 
+    /*
+     * PHP and JS linting commands and files
+     */
+    const PHP_LINT_COMMAND = 'composer run-script lint';
+    const PHP_LINT_FILE = 'composer.json';
+    const JS_LINT_COMMAND = 'npm run lint';
+    const JS_LINT_FILE = 'package.json';
+
     /**
      * @Flow\Inject
      * @var \Sitegeist\NeosGuidelines\Utility\Utilities
@@ -78,61 +86,47 @@ class GuidelinesCommandController extends CommandController
     }
 
     /**
-     * Searches for all versioned package.jsons and runs a lint command
+     * pass the lint command and filename name to the lint function
      *
      * @return void
      */
     public function lintJavascriptCommand()
     {
-        $versionedPackageJsons = explode("\n", shell_exec('git ls-tree -r master --name-only | grep package.json'));
-        $lintCommand = 'npm run lint &> /dev/null';
-        
-        foreach ($versionedPackageJsons as $packageJSON) {
-            if ($packageJSON) {
-                $packageJSONPath = substr($packageJSON, 0, strlen($packageJSON) - strlen('package.json'));
-                if ($packageJSONPath) {
-                    $command = 'cd ' . $packageJSONPath . ' && ' . $lintCommand;
-                    system($command, $lintValue);
-                } else {
-                    $command = $lintCommand;
-                    system($command, $lintValue);
-                }
-
-                if ($lintValue != 0) {
-                    throw new \Exception(
-                        'The command: "' . $command . '" returned a non zero exit value'
-                    );
-                }
-            }
-        }
+        $this->lint(self::JS_LINT_COMMAND, self::JS_LINT_FILE);
     }
 
     /**
-     * Searches for all versioned composer.jsons and runs a lint command
+     * pass the lint command and filename name to the lint function
      *
      * @return void
      */
     public function lintPhpCommand()
     {
-        $versionedComposerJsons = explode("\n", shell_exec('git ls-tree -r master --name-only | grep composer.json'));
-        $lintCommand = 'composer run-script lint &> /dev/null';
-        
-        foreach ($versionedComposerJsons as $composerJSON) {
-            if ($composerJSON) {
-                $composerJSONPath = substr($composerJSON, 0, strlen($composerJSON) - strlen('composer.json'));
-                if ($composerJSONPath) {
-                    $command = 'cd ' . $composerJSONPath . ' && ' . $lintCommand;
-                    system($command, $lintValue);
-                } else {
-                    $command = $lintCommand;
-                    system($command, $lintValue);
-                }
+        $this->lint(self::PHP_LINT_COMMAND, self::PHP_LINT_FILE);
+    }
 
-                if ($lintValue != 0) {
-                    throw new \Exception(
-                        'The command: "' . $command . '" returned a non zero exit value'
-                    );
-                }
+    /**
+     * Searches for all files with a given filename  which are under VCS
+     * and executes a lint script in the directory where the file is
+     * located
+     *
+     * @param string $lintCommand
+     * @param string $filename
+     * @return void
+     */
+    private function lint($lintCommand, $filename)
+    {
+        $files = $this->utilities->getVersionedFiles($filename);
+
+        foreach ($files as $file) {
+            $filePath = $this->utilities->getAbsoluteFileDirectory($file);
+            $command = 'cd ' . $filePath . ' && ' . $lintCommand . ' &> /dev/null';
+            system($command, $lintValue);
+            
+            if ($lintValue != 0) {
+                throw new \Exception(
+                    'The command: "' . $command . '" returned a non zero exit value'
+                );
             }
         }
     }
