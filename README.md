@@ -18,8 +18,10 @@ Add this repository to your composer.json
 
 and run `composer require --dev sitegeist/neosguidelines:dev-master`
 
-This will give you a new flow-command `guidelines:validate`
---> `./flow guidelines:validate`
+This will give you the folling new flow-commands
+--> `./flow guidelines:validate`  
+--> `./flow guidelines:lintphp`  
+--> `./flow guidelines:lintjavascript`  
 
 ## Guidelines
 
@@ -28,3 +30,9 @@ Also it checks if the `README.md` contains the following sections(headlines(#)):
 * Installation
 * Deployment
 * Versionskontrolle
+
+__Every composer.json and package.json have to implement a lint scirpt.__
+The command will search for every `composer.json` and `package.json` in the project and runs a lint command in the directory where the file
+is located.
+For a `package.json` it runs `npm run lint`
+For a `composer.json` it runs `composer run-script lint`
