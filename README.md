@@ -25,7 +25,7 @@ This will give you the folling new flow-commands
 
 ## Guidelines
 
-Currently this command checks if a `README.md`, `composer.lock`, `npm-shrinkwrap.json` and `.editorconfig` file exists and is under version-control via git.
+Currently this command checks if a `README.md`, `composer.lock`, `npm-shrinkwrap.json` and `.editorconfig` file exists and is under version-control via git in your project-root.
 Also it checks if the `README.md` contains the following sections(headlines(#)):
 * Installation
 * Deployment
