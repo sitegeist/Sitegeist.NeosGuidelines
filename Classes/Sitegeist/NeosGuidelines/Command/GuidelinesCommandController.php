@@ -20,6 +20,7 @@ class GuidelinesCommandController extends CommandController
      */
     const EDITORCONFIG = '.editorconfig';
     const COMPOSER_LOCK = 'composer.lock';
+    const NPM_SHRINKWRAP = 'npm-shrinkwrap.json';
     const README = 'README.md';
 
     /*
@@ -53,6 +54,7 @@ class GuidelinesCommandController extends CommandController
         $files = array(
             self::EDITORCONFIG,
             self::COMPOSER_LOCK,
+            self::NPM_SHRINKWRAP,
             self::README
         );
 
