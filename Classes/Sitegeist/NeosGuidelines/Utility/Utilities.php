@@ -66,7 +66,7 @@ class Utilities
         return $this->getRootDir() . $filename;
     }
 
-    /*
+    /**
      * Normalize the Readme-sections - remove # and whitespace
      *
      * @param array $readme
@@ -88,7 +88,7 @@ class Utilities
         return $readmeSections;
     }
 
-    /*
+    /**
      * Checks if a string begins with a specific substr
      *
      * @param string $str
@@ -122,7 +122,6 @@ class Utilities
     private function fileIsInVCS($filename)
     {
         $value = intval(shell_exec('git ls-files ' . $filename . ' --error-unmatch &>/dev/null; echo $?'));
-
         return $value === 0;
     }
 

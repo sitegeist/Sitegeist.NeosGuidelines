@@ -15,7 +15,7 @@ use TYPO3\Flow\Cli\CommandController;
 class GuidelinesCommandController extends CommandController
 {
     
-    /*
+    /**
      * Files which are mandatory in the repo
      */
     const EDITORCONFIG = '.editorconfig';
@@ -23,14 +23,14 @@ class GuidelinesCommandController extends CommandController
     const NPM_SHRINKWRAP = 'npm-shrinkwrap.json';
     const README = 'README.md';
 
-    /*
+    /**
      * Sections which are mandatory in the README file
      */
     const SETUP = 'Installation';
     const VCS = 'Versionskontrolle';
     const DEPLOYMENT = 'Deployment';
 
-    /*
+    /**
      * PHP and JS linting commands and files
      */
     const PHP_LINT_COMMAND = 'composer run-script lint';
