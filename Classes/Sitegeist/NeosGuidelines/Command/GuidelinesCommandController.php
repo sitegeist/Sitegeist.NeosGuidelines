@@ -14,7 +14,7 @@ use TYPO3\Flow\Cli\CommandController;
  */
 class GuidelinesCommandController extends CommandController
 {
-    
+
     /**
      * Files which are mandatory in the repo
      */
@@ -69,12 +69,12 @@ class GuidelinesCommandController extends CommandController
             $filePath = $this->utilities->getAbsolutFilePath($file);
             if (!$this->utilities->fileExistsAndIsInVCS($filePath)) {
                 throw new \Exception(
-                    'No ' . $file . ' found in your project. 
+                    'No ' . $file . ' found in your project.
                     If this file is there check if it is in your VCS.'
                 );
             }
         }
-        
+
         $readme = file($this->utilities->getAbsolutFilePath(self::README));
         $readme = $this->utilities->getReadmeSections($readme);
         foreach ($readmeSections as $readmeSection) {
@@ -109,11 +109,51 @@ class GuidelinesCommandController extends CommandController
         $this->lint(self::PHP_LINT_COMMAND, self::PHP_LINT_FILE, self::PHP_MANDAORY_FILE);
     }
 
+	/**
+	 * Checks if files implement the .editorconfig rules
+	 * As fallback for indention tabs are used
+	 */
     public function checkEditorConfigCommand()
     {
-        $ini_array = parse_ini_file('.editorconfig', true);
-        print_r($ini_array);
-        var_dump($ini_array);
+        $editorconfig = parse_ini_file('.editorconfig', true);
+
+        foreach ($editorconfig as $filePattern => $formattingRules) {
+            if ($filePattern != 'root' && $filePattern != '*') {
+                // @TODO smth cool like ONE regex pattern or so
+                $filePattern = str_replace('*.{', '.*\.(', $filePattern);
+                $filePattern = str_replace('}', ')', $filePattern);
+                $filePattern = str_replace(',', '|', $filePattern);
+
+                $files = $this->utilities->getVersionedFiles($filePattern);
+
+                if (isset($formattingRules['indent_style']) && $formattingRules['indent_style'] != 1) {
+                    $indent_style = $formattingRules['indent_style'];
+                }
+
+                foreach ($files as $file) {
+                    if ($indent_style == 'space') {
+                        $pattern = '(^( +|)\S+.*$|^$)';
+                    } else {
+                        // this is the pattern for tab
+                        // which is used as default
+                        $pattern = '(^(\t+|)\S+.*$|^$)';
+                    }
+
+                    // grep for extended regex and reverse the matches
+                    // so I get only 0 as return value if one or more lines does not fit
+                    $command = 'grep -Ev "' . $pattern . '" ' . $file . ' &>/dev/null';
+                    system($command, $output);
+
+                    // grep returns 1 if no match was found
+                    if ($output != 1) {
+                        throw new \Exception(
+                            'The file: ' . $file . ' does not seem to implement your editorconfig rules!'
+                        );
+
+                    }
+                }
+            }
+        }
     }
 
     /**
@@ -133,7 +173,7 @@ class GuidelinesCommandController extends CommandController
             $filePath = $this->utilities->getAbsoluteFileDirectory($file);
             $command = 'cd ' . $filePath . ' && ' . $lintCommand . ' &> /dev/null';
             system($command, $lintValue);
-            
+
             if ($lintValue != 0) {
                 throw new \Exception(
                     'The command: "' . $command . '" returned a non zero exit value'

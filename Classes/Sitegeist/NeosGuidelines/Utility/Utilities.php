@@ -31,7 +31,7 @@ class Utilities
     {
         $root = $this->getRootDir();
         $branch = '$(git rev-parse --abbrev-ref HEAD)';
-        $command = 'cd ' . $root . ' && git ls-tree -r ' . $branch . ' --name-only | grep ' . $fileName;
+        $command = 'cd ' . $root . ' && git ls-tree -r ' . $branch . ' --name-only | grep -E "' . $fileName . '$"';
         $fileArray = explode("\n", shell_exec($command));
 
         // because the last element is always an empty string
@@ -108,7 +108,7 @@ class Utilities
      * @param string $fileName
      * @return boolean
      */
-    private function fileExists($fileName)
+    protected function fileExists($fileName)
     {
         return file_exists($fileName);
     }
@@ -119,7 +119,7 @@ class Utilities
      * @param string $fileName
      * @return boolean
      */
-    private function fileIsInVCS($fileName)
+    protected function fileIsInVCS($fileName)
     {
         $value = intval(shell_exec('git ls-files ' . $fileName . ' --error-unmatch &>/dev/null; echo $?'));
         return $value === 0;
@@ -130,7 +130,7 @@ class Utilities
      *
      * @return string
      */
-    private function getRootDir()
+    protected function getRootDir()
     {
         return FLOW_PATH_ROOT;
     }
