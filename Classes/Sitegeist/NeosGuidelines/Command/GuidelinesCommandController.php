@@ -34,7 +34,7 @@ class GuidelinesCommandController extends CommandController
      */
     const PHP_LINT_COMMAND = 'composer run-script lint';
     const PHP_LINT_FILE = 'composer.json';
-    const PHP_MANDAORY_FILE = 'composer.lock';
+    const PHP_MANDATORY_FILE = 'composer.lock';
 
     const JS_LINT_COMMAND = 'npm run lint';
     const JS_LINT_FILE = 'package.json';
@@ -87,6 +87,7 @@ class GuidelinesCommandController extends CommandController
 
         $this->lintJavascriptCommand();
         $this->lintPhpCommand();
+        $this->checkEditorConfigCommand();
     }
 
     /**
@@ -106,7 +107,7 @@ class GuidelinesCommandController extends CommandController
      */
     public function lintPhpCommand()
     {
-        $this->lint(self::PHP_LINT_COMMAND, self::PHP_LINT_FILE, self::PHP_MANDAORY_FILE);
+        $this->lint(self::PHP_LINT_COMMAND, self::PHP_LINT_FILE, self::PHP_MANDATORY_FILE);
     }
 
     /**
