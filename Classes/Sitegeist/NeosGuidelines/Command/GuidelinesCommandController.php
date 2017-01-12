@@ -109,10 +109,10 @@ class GuidelinesCommandController extends CommandController
         $this->lint(self::PHP_LINT_COMMAND, self::PHP_LINT_FILE, self::PHP_MANDAORY_FILE);
     }
 
-	/**
-	 * Checks if files implement the .editorconfig rules
-	 * As fallback for indention tabs are used
-	 */
+    /**
+     * Checks if files implement the .editorconfig rules
+     * As fallback for indention tabs are used
+     */
     public function checkEditorConfigCommand()
     {
         $editorconfig = parse_ini_file('.editorconfig', true);
@@ -149,7 +149,6 @@ class GuidelinesCommandController extends CommandController
                         throw new \Exception(
                             'The file: ' . $file . ' does not seem to implement your editorconfig rules!'
                         );
-
                     }
                 }
             }
