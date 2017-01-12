@@ -35,6 +35,7 @@ class GuidelinesCommandController extends CommandController
     const PHP_LINT_COMMAND = 'composer run-script lint';
     const PHP_LINT_FILE = 'composer.json';
     const PHP_MANDAORY_FILE = 'composer.lock';
+
     const JS_LINT_COMMAND = 'npm run lint';
     const JS_LINT_FILE = 'package.json';
     const JS_MANDATORY_FILE = 'npm-shrinkwrap.json';
@@ -117,7 +118,7 @@ class GuidelinesCommandController extends CommandController
      * @param string $filename
      * @return void
      */
-    private function lint($lintCommand, $filename, $mandatoryFile = null)
+    protected function lint($lintCommand, $filename, $mandatoryFile = null)
     {
         $files = $this->utilities->getVersionedFiles($filename);
 

@@ -95,7 +95,7 @@ class Utilities
      * @param string $sub
      * @return boolean
      */
-    private function beginsWith($str, $sub)
+    protected function beginsWith($str, $sub)
     {
         $str = trim($str);
         $sub = trim($sub);
