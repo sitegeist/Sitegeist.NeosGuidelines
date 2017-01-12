@@ -109,6 +109,13 @@ class GuidelinesCommandController extends CommandController
         $this->lint(self::PHP_LINT_COMMAND, self::PHP_LINT_FILE, self::PHP_MANDAORY_FILE);
     }
 
+    public function checkEditorConfigCommand()
+    {
+        $ini_array = parse_ini_file('.editorconfig', true);
+        print_r($ini_array);
+        var_dump($ini_array);
+    }
+
     /**
      * Searches for all files with a given filename  which are under VCS
      * and executes a lint script in the directory where the file is
