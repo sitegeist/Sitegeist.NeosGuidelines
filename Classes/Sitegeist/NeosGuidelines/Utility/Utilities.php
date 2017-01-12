@@ -12,26 +12,26 @@ class Utilities
     /**
      * Composes fileExists and fileIsInVCS
      *
-     * @param string $filename
+     * @param string $fileName
      * @return boolean
      */
-    public function fileExistsAndIsInVCS($filename)
+    public function fileExistsAndIsInVCS($fileName)
     {
-        $file = $this->getAbsolutFilePath($filename);
-        return $this->fileExists($file) && $this->fileIsInVCS($file);
+        return $this->fileExists($fileName) && $this->fileIsInVCS($fileName);
     }
 
 
     /**
      * Searches for files which are under VCS in the whole project directory
      *
-     * @param string $filename
+     * @param string $fileName
      * @return array of strings
      */
-    public function getVersionedFiles($filename)
+    public function getVersionedFiles($fileName)
     {
         $root = $this->getRootDir();
-        $command = 'cd ' . $root . ' && git ls-tree -r $(git rev-parse --abbrev-ref HEAD) --name-only | grep ' . $filename;
+        $branch = '$(git rev-parse --abbrev-ref HEAD)';
+        $command = 'cd ' . $root . ' && git ls-tree -r ' . $branch . ' --name-only | grep ' . $fileName;
         $fileArray = explode("\n", shell_exec($command));
 
         // because the last element is always an empty string
@@ -58,12 +58,12 @@ class Utilities
     /**
      * Returns the absolut path of a file
      *
-     * @param string $filename
+     * @param string $fileName
      * @return string
      */
-    public function getAbsolutFilePath($filename)
+    public function getAbsolutFilePath($fileName)
     {
-        return $this->getRootDir() . $filename;
+        return $this->getRootDir() . $fileName;
     }
 
     /**
@@ -105,23 +105,23 @@ class Utilities
     /**
      * Checks if a file exists
      *
-     * @param string $filename
+     * @param string $fileName
      * @return boolean
      */
-    private function fileExists($filename)
+    private function fileExists($fileName)
     {
-        return file_exists($filename);
+        return file_exists($fileName);
     }
 
     /**
      * Checks if a file is in Git
      *
-     * @param string $filename
+     * @param string $fileName
      * @return boolean
      */
-    private function fileIsInVCS($filename)
+    private function fileIsInVCS($fileName)
     {
-        $value = intval(shell_exec('git ls-files ' . $filename . ' --error-unmatch &>/dev/null; echo $?'));
+        $value = intval(shell_exec('git ls-files ' . $fileName . ' --error-unmatch &>/dev/null; echo $?'));
         return $value === 0;
     }
 

@@ -34,8 +34,10 @@ class GuidelinesCommandController extends CommandController
      */
     const PHP_LINT_COMMAND = 'composer run-script lint';
     const PHP_LINT_FILE = 'composer.json';
+    const PHP_MANDAORY_FILE = 'composer.lock';
     const JS_LINT_COMMAND = 'npm run lint';
     const JS_LINT_FILE = 'package.json';
+    const JS_MANDATORY_FILE = 'npm-shrinkwrap.json';
 
     /**
      * @Flow\Inject
@@ -63,7 +65,8 @@ class GuidelinesCommandController extends CommandController
         );
 
         foreach ($files as $file) {
-            if (!$this->utilities->fileExistsAndIsInVCS($file)) {
+            $filePath = $this->utilities->getAbsolutFilePath($file);
+            if (!$this->utilities->fileExistsAndIsInVCS($filePath)) {
                 throw new \Exception(
                     'No ' . $file . ' found in your project. 
                     If this file is there check if it is in your VCS.'
@@ -92,7 +95,7 @@ class GuidelinesCommandController extends CommandController
      */
     public function lintJavascriptCommand()
     {
-        $this->lint(self::JS_LINT_COMMAND, self::JS_LINT_FILE);
+        $this->lint(self::JS_LINT_COMMAND, self::JS_LINT_FILE, self::JS_MANDATORY_FILE);
     }
 
     /**
@@ -102,7 +105,7 @@ class GuidelinesCommandController extends CommandController
      */
     public function lintPhpCommand()
     {
-        $this->lint(self::PHP_LINT_COMMAND, self::PHP_LINT_FILE);
+        $this->lint(self::PHP_LINT_COMMAND, self::PHP_LINT_FILE, self::PHP_MANDAORY_FILE);
     }
 
     /**
@@ -114,7 +117,7 @@ class GuidelinesCommandController extends CommandController
      * @param string $filename
      * @return void
      */
-    private function lint($lintCommand, $filename)
+    private function lint($lintCommand, $filename, $mandatoryFile = null)
     {
         $files = $this->utilities->getVersionedFiles($filename);
 
@@ -127,6 +130,14 @@ class GuidelinesCommandController extends CommandController
                 throw new \Exception(
                     'The command: "' . $command . '" returned a non zero exit value'
                 );
+            }
+
+            if ($mandatoryFile != null) {
+                if (!$this->utilities->fileExistsAndIsInVCS($filePath . '/' . $mandatoryFile)) {
+                    throw new \Exception(
+                        'There is no corresponding ' . $mandatoryFile . ' for '  . $file
+                    );
+                }
             }
         }
     }
