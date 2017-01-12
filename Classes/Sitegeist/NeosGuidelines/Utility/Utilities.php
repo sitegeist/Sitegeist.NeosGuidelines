@@ -31,7 +31,7 @@ class Utilities
     public function getVersionedFiles($filename)
     {
         $root = $this->getRootDir();
-        $command = 'cd ' . $root . ' && git ls-tree -r master --name-only | grep ' . $filename;
+        $command = 'cd ' . $root . ' && git ls-tree -r $(git rev-parse --abbrev-ref HEAD) --name-only | grep ' . $filename;
         $fileArray = explode("\n", shell_exec($command));
 
         // because the last element is always an empty string
