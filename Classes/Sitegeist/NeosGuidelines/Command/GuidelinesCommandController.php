@@ -133,6 +133,7 @@ class GuidelinesCommandController extends CommandController
                     $defaultTrimTrailingWhitespace = true;
                 }
 
+                // @TODO IMPLEMENT END OF LINE CHECK
                 if (isset($formattingRules['end_of_line']) && $formattingRules['end_of_line'] != 1) {
                     $defaultEndOfLine = $formattingRules['end_of_line'];
                 } else {
@@ -161,6 +162,7 @@ class GuidelinesCommandController extends CommandController
                     $trimTrailingWhitespace = $defaultTrimTrailingWhitespace;
                 }
 
+                // @TODO IMPLEMENT END OF LINE CHECK
                 if (isset($formattingRules['end_of_line']) && $formattingRules['end_of_line'] != 1) {
                     $endOfLine = $formattingRules['end_of_line'];
                 } else {
@@ -188,6 +190,20 @@ class GuidelinesCommandController extends CommandController
                         throw new \Exception(
                             'The file: ' . $file . ' does not seem to implement your editorconfig rules!'
                         );
+                    }
+
+                    if ($trimTrailingWhitespace) {
+                        $pattern = '.*\s+$';
+
+                        $command = 'grep "' . $pattern . '" ' . $file . ' &>/dev/null';
+                        system($command, $output);
+
+                        // grep returns 1 if no match was found
+                        if ($output != 1) {
+                            throw new \Exception(
+                                'The file: ' . $file . ' does not seem to implement your editorconfig rules!'
+                            );
+                        }
                     }
                 }
             }
