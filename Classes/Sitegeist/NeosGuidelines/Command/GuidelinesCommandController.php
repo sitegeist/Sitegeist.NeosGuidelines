@@ -119,6 +119,27 @@ class GuidelinesCommandController extends CommandController
         $editorconfig = parse_ini_file('.editorconfig', true);
 
         foreach ($editorconfig as $filePattern => $formattingRules) {
+            if ($filePattern == '*') {
+                if (isset($formattingRules['indent_style']) && $formattingRules['indent_style'] != 1) {
+                    $defaultIndentStyle = $formattingRules['indent_style'];
+                } else {
+                    $defaultIndentStyle = 'tab';
+                }
+
+                if (isset($formattingRules['trim_trailing_whitespace'])
+                        && $formattingRules['trim_trailing_whitespace'] != 1) {
+                    $defaultTrimTrailingWhitespace = $formattingRules['trim_trailing_whitespace'];
+                } else {
+                    $defaultTrimTrailingWhitespace = true;
+                }
+
+                if (isset($formattingRules['end_of_line']) && $formattingRules['end_of_line'] != 1) {
+                    $defaultEndOfLine = $formattingRules['end_of_line'];
+                } else {
+                    $defaultEndOfLine = 'lf';
+                }
+            }
+
             if ($filePattern != 'root' && $filePattern != '*') {
                 // @TODO smth cool like ONE regex pattern or so
                 $filePattern = str_replace('*.{', '.*\.(', $filePattern);
@@ -128,16 +149,33 @@ class GuidelinesCommandController extends CommandController
                 $files = $this->utilities->getVersionedFiles($filePattern);
 
                 if (isset($formattingRules['indent_style']) && $formattingRules['indent_style'] != 1) {
-                    $indent_style = $formattingRules['indent_style'];
+                    $indentStyle = $formattingRules['indent_style'];
+                } else {
+                    $indentStyle = $defaultIndentStyle;
+                }
+
+                if (isset($formattingRules['trim_trailing_whitespace'])
+                        && $formattingRules['trim_trailing_whitespace'] != 1) {
+                    $trimTrailingWhitespace = $formattingRules['trim_trailing_whitespace'];
+                } else {
+                    $trimTrailingWhitespace = $defaultTrimTrailingWhitespace;
+                }
+
+                if (isset($formattingRules['end_of_line']) && $formattingRules['end_of_line'] != 1) {
+                    $endOfLine = $formattingRules['end_of_line'];
+                } else {
+                    $endOfLine = $defaultEndOfLine;
                 }
 
                 foreach ($files as $file) {
-                    if ($indent_style == 'space') {
+                    if ($indentStyle == 'space') {
                         $pattern = '(^( +|)\S+.*$|^$)';
-                    } else {
-                        // this is the pattern for tab
-                        // which is used as default
+                    } elseif ($indentStyle == 'tab') {
                         $pattern = '(^(\t+|)\S+.*$|^$)';
+                    } else {
+                        throw new \Exception(
+                            "ERROR: not a correct indent_style in your .editorconf. Use only space or tab"
+                        );
                     }
 
                     // grep for extended regex and reverse the matches
