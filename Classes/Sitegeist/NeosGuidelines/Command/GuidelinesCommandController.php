@@ -21,6 +21,7 @@ class GuidelinesCommandController extends CommandController
     const EDITORCONFIG = '.editorconfig';
     const COMPOSER_LOCK = 'composer.lock';
     const README = 'README.md';
+    const NVM = '.nvmrc';
 
     /**
      * Sections which are mandatory in the README file
@@ -52,10 +53,11 @@ class GuidelinesCommandController extends CommandController
      */
     public function validateCommand()
     {
-        $files = array(
+        $mandatoryFiles = array(
             self::EDITORCONFIG,
             self::COMPOSER_LOCK,
-            self::README
+            self::README,
+            self::NVM
         );
 
         $readmeSections = array(
@@ -64,7 +66,7 @@ class GuidelinesCommandController extends CommandController
             self::DEPLOYMENT
         );
 
-        foreach ($files as $file) {
+        foreach ($mandatoryFiles as $file) {
             $filePath = $this->utilities->getAbsolutFilePath($file);
             if (!$this->utilities->fileExistsAndIsInVCS($filePath)) {
                 throw new \Exception(
