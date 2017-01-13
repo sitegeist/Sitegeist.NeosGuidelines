@@ -21,7 +21,7 @@ class GuidelinesCommandController extends CommandController
     const EDITORCONFIG = '.editorconfig';
     const COMPOSER_LOCK = 'composer.lock';
     const README = 'README.md';
-
+InjectConfiguration
     /**
      * Sections which are mandatory in the README file
      */
@@ -148,7 +148,8 @@ class GuidelinesCommandController extends CommandController
 
                 $files = $this->utilities->getVersionedFiles($filePattern);
 
-                if (isset($formattingRules['indent_style']) && $formattingRules['indent_style'] != 1) {
+                if (isset($formattingRules['indent_style'])
+                        && $formattingRules['indent_style'] != 1) {
                     $indentStyle = $formattingRules['indent_style'];
                 } else {
                     $indentStyle = $defaultIndentStyle;
@@ -162,7 +163,8 @@ class GuidelinesCommandController extends CommandController
                 }
 
                 // @TODO IMPLEMENT END OF LINE CHECK
-                if (isset($formattingRules['end_of_line']) && $formattingRules['end_of_line'] != 1) {
+                if (isset($formattingRules['end_of_line'])
+                        && $formattingRules['end_of_line'] != 1) {
                     $endOfLine = $formattingRules['end_of_line'];
                 } else {
                     $endOfLine = $defaultEndOfLine;
