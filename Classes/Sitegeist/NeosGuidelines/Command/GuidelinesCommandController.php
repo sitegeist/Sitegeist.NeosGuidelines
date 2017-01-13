@@ -21,7 +21,7 @@ class GuidelinesCommandController extends CommandController
     const EDITORCONFIG = '.editorconfig';
     const COMPOSER_LOCK = 'composer.lock';
     const README = 'README.md';
-InjectConfiguration
+
     /**
      * Sections which are mandatory in the README file
      */
