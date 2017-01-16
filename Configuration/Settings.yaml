@@ -1,0 +1,10 @@
+Sitegeist:
+  NeosGuidelines:
+    readmeFile: 'README.md'
+    mandatoryFiles: ['.editorconfig', 'composer.lock', 'README.md', '.nvmrc']
+    readmeSections: ['Installation', 'Versionskontrolle', 'Deployment']
+    phpManifest: 'composer.json'
+    phpLintCommand: 'composer run-script lint'
+    jsManifest: 'package.json'
+    jsLintCommand: 'npm run lint'
+    jsAdditionalFile: 'npm-shrinkwrap.json'
