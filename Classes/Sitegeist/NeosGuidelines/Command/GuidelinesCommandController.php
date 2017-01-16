@@ -28,15 +28,15 @@ class GuidelinesCommandController extends CommandController
 
     /**
      * @var string
-     * @Flow\InjectConfiguration("phpEntryFile")
+     * @Flow\InjectConfiguration("phpManifest")
      */
-    protected $phpEntryFile;
+    protected $phpManifest;
 
     /**
      * @var string
-     * @Flow\InjectConfiguration("jsEntryFile")
+     * @Flow\InjectConfiguration("jsManifest")
      */
-    protected $jsEntryFile;
+    protected $jsManifest;
 
     /**
      * @var string
@@ -107,7 +107,7 @@ class GuidelinesCommandController extends CommandController
      */
     public function lintJavascriptCommand()
     {
-        $this->lint($this->jsLintCommand, $this->jsEntryFile, $this->jsAdditionalFile);
+        $this->lint($this->jsLintCommand, $this->jsManifest, $this->jsAdditionalFile);
     }
 
     /**
@@ -117,7 +117,7 @@ class GuidelinesCommandController extends CommandController
      */
     public function lintPhpCommand()
     {
-        $this->lint($this->phpLintCommand, $this->phpEntryFile);
+        $this->lint($this->phpLintCommand, $this->phpManifest);
     }
 
     /**
