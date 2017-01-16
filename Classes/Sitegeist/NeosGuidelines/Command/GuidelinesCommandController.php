@@ -14,31 +14,53 @@ use Neos\Flow\Cli\CommandController;
  */
 class GuidelinesCommandController extends CommandController
 {
+    /**
+     * @var string
+     * @Flow\InjectConfiguration("mandatoryFiles")
+     */
+    protected $mandatoryFiles;
 
     /**
-     * Files which are mandatory in the repo
+     * @var string
+     * @Flow\InjectConfiguration("readmeSections")
      */
-    const EDITORCONFIG = '.editorconfig';
-    const COMPOSER_LOCK = 'composer.lock';
-    const README = 'README.md';
-    const NVM = '.nvmrc';
+    protected $readmeSections;
 
     /**
-     * Sections which are mandatory in the README file
+     * @var string
+     * @Flow\InjectConfiguration("phpEntryFile")
      */
-    const SETUP = 'Installation';
-    const VCS = 'Versionskontrolle';
-    const DEPLOYMENT = 'Deployment';
+    protected $phpEntryFile;
 
     /**
-     * PHP and JS linting commands and files
+     * @var string
+     * @Flow\InjectConfiguration("jsEntryFile")
      */
-    const PHP_LINT_COMMAND = 'composer run-script lint';
-    const PHP_LINT_FILE = 'composer.json';
+    protected $jsEntryFile;
 
-    const JS_LINT_COMMAND = 'npm run lint';
-    const JS_LINT_FILE = 'package.json';
-    const JS_MANDATORY_FILE = 'npm-shrinkwrap.json';
+    /**
+     * @var string
+     * @Flow\InjectConfiguration("phpLintCommand")
+     */
+    protected $phpLintCommand;
+
+    /**
+     * @var string
+     * @Flow\InjectConfiguration("jsLintCommand")
+     */
+    protected $jsLintCommand;
+
+    /**
+     * @var string
+     * @Flow\InjectConfiguration("jsAdditionalFile")
+     */
+    protected $jsAdditionalFile;
+
+    /**
+     * @var string
+     * @Flow\InjectConfiguration("readmeFile")
+     */
+    protected $readmeFile;
 
     /**
      * @Flow\Inject
@@ -53,20 +75,7 @@ class GuidelinesCommandController extends CommandController
      */
     public function validateCommand()
     {
-        $mandatoryFiles = array(
-            self::EDITORCONFIG,
-            self::COMPOSER_LOCK,
-            self::README,
-            self::NVM
-        );
-
-        $readmeSections = array(
-            self::SETUP,
-            self::VCS,
-            self::DEPLOYMENT
-        );
-
-        foreach ($mandatoryFiles as $file) {
+        foreach ($this->mandatoryFiles as $file) {
             $filePath = $this->utilities->getAbsolutFilePath($file);
             if (!$this->utilities->fileExistsAndIsInVCS($filePath)) {
                 throw new \Exception(
@@ -76,12 +85,12 @@ class GuidelinesCommandController extends CommandController
             }
         }
 
-        $readme = file($this->utilities->getAbsolutFilePath(self::README));
+        $readme = file($this->utilities->getAbsolutFilePath($this->readmeFile));
         $readme = $this->utilities->getReadmeSections($readme);
-        foreach ($readmeSections as $readmeSection) {
+        foreach ($this->readmeSections as $readmeSection) {
             if (!in_array($readmeSection, $readme)) {
                 throw new \Exception(
-                    'No ' . $readmeSection . ' section found in your ' . self::README . '.'
+                    'No ' . $readmeSection . ' section found in your ' . $this->readmeFile . '.'
                 );
             }
         }
@@ -98,7 +107,7 @@ class GuidelinesCommandController extends CommandController
      */
     public function lintJavascriptCommand()
     {
-        $this->lint(self::JS_LINT_COMMAND, self::JS_LINT_FILE, self::JS_MANDATORY_FILE);
+        $this->lint($this->jsLintCommand, $this->jsEntryFile, $this->jsAdditionalFile);
     }
 
     /**
@@ -108,7 +117,7 @@ class GuidelinesCommandController extends CommandController
      */
     public function lintPhpCommand()
     {
-        $this->lint(self::PHP_LINT_COMMAND, self::PHP_LINT_FILE);
+        $this->lint($this->phpLintCommand, $this->phpEntryFile);
     }
 
     /**
