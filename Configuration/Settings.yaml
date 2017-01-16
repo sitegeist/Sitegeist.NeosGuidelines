@@ -1,10 +1,23 @@
 Sitegeist:
   NeosGuidelines:
-    readmeFile: 'README.md'
-    mandatoryFiles: ['.editorconfig', 'composer.lock', 'README.md', '.nvmrc']
-    readmeSections: ['Installation', 'Versionskontrolle', 'Deployment']
-    phpManifest: 'composer.json'
-    phpLintCommand: 'composer run-script lint'
-    jsManifest: 'package.json'
-    jsLintCommand: 'npm run lint'
-    jsAdditionalFile: 'npm-shrinkwrap.json'
+    distribution:
+      mandatoryFiles:
+        'README.md': 'No README.md file in your project root'
+        'composer.json': 'No composer.json file in your project root'
+        'composer.lock': 'No composer.lock file in your project root'
+        '.editorconfig': 'No .editoroconfig file in your project root'
+        '.nvmrc': 'No .nvmrc file in your project root'
+      manifests:
+        'php': 'composer.json'
+        'js': 'package.json'
+      additionalManifestFiles:
+        'js': 'npm-shrinkwrap.json'
+        'php': ''
+      lint:
+        'php': 'composer run-script lint'
+        'js': 'npm run lint'
+      readmeFile: 'README.md'
+      readmeSections:
+        'Installation': 'No headline Installation in your README.md found'
+        'Versionskontrolle': 'No headline Versionskontrolle in your README.md found'
+        'Deployment': 'No headline Deployment in your README.md found'

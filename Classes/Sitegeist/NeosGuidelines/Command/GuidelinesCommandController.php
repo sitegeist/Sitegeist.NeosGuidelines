@@ -16,51 +16,9 @@ class GuidelinesCommandController extends CommandController
 {
     /**
      * @var string
-     * @Flow\InjectConfiguration("mandatoryFiles")
+     * @Flow\InjectConfiguration("distribution")
      */
-    protected $mandatoryFiles;
-
-    /**
-     * @var string
-     * @Flow\InjectConfiguration("readmeSections")
-     */
-    protected $readmeSections;
-
-    /**
-     * @var string
-     * @Flow\InjectConfiguration("phpManifest")
-     */
-    protected $phpManifest;
-
-    /**
-     * @var string
-     * @Flow\InjectConfiguration("jsManifest")
-     */
-    protected $jsManifest;
-
-    /**
-     * @var string
-     * @Flow\InjectConfiguration("phpLintCommand")
-     */
-    protected $phpLintCommand;
-
-    /**
-     * @var string
-     * @Flow\InjectConfiguration("jsLintCommand")
-     */
-    protected $jsLintCommand;
-
-    /**
-     * @var string
-     * @Flow\InjectConfiguration("jsAdditionalFile")
-     */
-    protected $jsAdditionalFile;
-
-    /**
-     * @var string
-     * @Flow\InjectConfiguration("readmeFile")
-     */
-    protected $readmeFile;
+    protected $distribution;
 
     /**
      * @Flow\Inject
@@ -70,44 +28,37 @@ class GuidelinesCommandController extends CommandController
 
     /**
      * Validate the current project against the Sitegeist Neos Guidelines
+     * Composes all other public commands
      *
      * @return void
      */
     public function validateCommand()
     {
-        foreach ($this->mandatoryFiles as $file) {
-            $filePath = $this->utilities->getAbsolutFilePath($file);
-            if (!$this->utilities->fileExistsAndIsInVCS($filePath)) {
-                throw new \Exception(
-                    'No ' . $file . ' found in your project.
-                    If this file is there check if it is in your VCS.'
-                );
-            }
-        }
-
-        $readme = file($this->utilities->getAbsolutFilePath($this->readmeFile));
-        $readme = $this->utilities->getReadmeSections($readme);
-        foreach ($this->readmeSections as $readmeSection) {
-            if (!in_array($readmeSection, $readme)) {
-                throw new \Exception(
-                    'No ' . $readmeSection . ' section found in your ' . $this->readmeFile . '.'
-                );
-            }
-        }
-
-        $this->lintJavascriptCommand();
-        $this->lintPhpCommand();
+        $this->checkMandatoryFilesCommand();
+        $this->checkReadmeCommand();
+        $this->lintCommand();
         $this->checkEditorConfigCommand();
     }
 
-    /**
-     * pass the lint command and filename name to the lint function
-     *
-     * @return void
-     */
-    public function lintJavascriptCommand()
+    public function checkMandatoryFilesCommand()
     {
-        $this->lint($this->jsLintCommand, $this->jsManifest, $this->jsAdditionalFile);
+        foreach ($this->distribution['mandatoryFiles'] as $file => $errorMessage) {
+            $filePath = $this->utilities->getAbsolutFilePath($file);
+            if (!$this->utilities->fileExistsAndIsInVCS($filePath)) {
+                throw new \Exception($errorMessage);
+            }
+        }
+    }
+
+    public function checkReadmeCommand()
+    {
+        $readme = file($this->utilities->getAbsolutFilePath($this->distribution['readmeFile']));
+        $readme = $this->utilities->getReadmeSections($readme);
+        foreach ($this->distribution['readmeSections'] as $readmeSection => $errorMessage) {
+            if (!in_array($readmeSection, $readme)) {
+                throw new \Exception($errorMessage);
+            }
+        }
     }
 
     /**
@@ -115,9 +66,15 @@ class GuidelinesCommandController extends CommandController
      *
      * @return void
      */
-    public function lintPhpCommand()
+    public function lintCommand()
     {
-        $this->lint($this->phpLintCommand, $this->phpManifest);
+        foreach ($this->distribution['lint'] as $type => $lintCommand) {
+            $this->lint(
+                $lintCommand,
+                $this->distribution['manifests'][$type],
+                $this->distribution['additionalManifestFiles'][$type]
+            );
+        }
     }
 
     /**
