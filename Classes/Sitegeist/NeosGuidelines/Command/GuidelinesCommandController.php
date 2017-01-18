@@ -38,12 +38,18 @@ class GuidelinesCommandController extends CommandController
     {
         $this->checkMandatoryFilesCommand();
         $this->checkReadmeCommand();
-        $this->checkComposerScriptsCommand();
-        $this->checkComposerPlattform();
+        $this->checkComposerCommand();
 
         die;
-        $this->lintCommand();
+
+        /* still don't exactly know how to implement this */
         $this->checkEditorConfigCommand();
+    }
+
+    public function checkComposerCommand()
+    {
+        $this->checkComposerScriptsCommand();
+        $this->checkComposerPlattform();
     }
 
     public function checkMandatoryFilesCommand()
