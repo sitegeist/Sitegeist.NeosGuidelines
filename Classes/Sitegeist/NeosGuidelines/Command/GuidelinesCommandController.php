@@ -40,7 +40,6 @@ class GuidelinesCommandController extends CommandController
         $this->checkReadmeCommand();
         $this->checkComposerCommand();
 
-        die;
 
         /* still don't exactly know how to implement this */
         $this->checkEditorConfigCommand();
@@ -271,10 +270,11 @@ class GuidelinesCommandController extends CommandController
         }
     }
 
-    protected function checkComposerPlattform() {
+    protected function checkComposerPlattform()
+    {
         $composerArray = $this->getComposerJsonArray();
 
-        if (!isset($composerArray['config']['plattform']['php'])) {
+        if (!isset($composerArray['config']['platform']['php'])) {
             throw new \Exception("No plattform is defined in your composer.json");
         }
     }
