@@ -6,28 +6,13 @@ Sitegeist:
         'composer.json': 'No composer.json file in your project root'
         'composer.lock': 'No composer.lock file in your project root'
         '.editorconfig': 'No .editoroconfig file in your project root'
-        '.nvmrc': 'No .nvmrc file in your project root'
       readmeFile: 'README.md'
       readmeSections:
         'Installation': 'No headline Installation in your README.md found'
         'Versionskontrolle': 'No headline Versionskontrolle in your README.md found'
         'Deployment': 'No headline Deployment in your README.md found'
-    packageDefaults:
       php:
-        manifest: 'composer.json'
-        lintCommand: 'composer run-script lint'
-        additionalFiles: []
-      js:
-        manifest: 'package.json'
-        lintCommand: 'npm run lint'
-        additionalFiles: ['npm-shrinkwrap.json']
+        lint: 'composer run-script lint'
+        test: 'composer run-script test'
       editorconfig:
         exclude: ['node_modules', 'Public']
-    # packages:
-    #   packageKey:
-    #     path: 'Packages/Sites/Neos.Demo/'
-    #     config:
-    #       js:
-    #         blabla: 'bbb'
-    #       php:
-    #         wawawa: 'ccc'
