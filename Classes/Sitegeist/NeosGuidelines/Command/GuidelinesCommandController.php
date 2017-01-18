@@ -23,18 +23,6 @@ class GuidelinesCommandController extends CommandController
     protected $distribution;
 
     /**
-     * @var string
-     * @Flow\InjectConfiguration("packageDefaults")
-     */
-    protected $packageDefaults;
-
-    /**
-     * @var string
-     * @Flow\InjectConfiguration("packages")
-     */
-    protected $packages;
-
-    /**
      * @Flow\Inject
      * @var \Sitegeist\NeosGuidelines\Utility\Utilities
      */
@@ -50,9 +38,10 @@ class GuidelinesCommandController extends CommandController
     {
         $this->checkMandatoryFilesCommand();
         $this->checkReadmeCommand();
+        $this->checkComposerScripts();
 
-        $this->lintCommand();
         die;
+        $this->lintCommand();
         $this->checkEditorConfigCommand();
     }
 
@@ -60,14 +49,6 @@ class GuidelinesCommandController extends CommandController
     {
         foreach ($this->distribution['mandatoryFiles'] as $file => $errorMessage) {
             $filePath = $this->utilities->getAbsolutFilePath($file);
-
-            /* @TODO check for script/lint */
-            if ($file == 'composer.json') {
-                $content = json_decode(file_get_contents($filePath));
-                if ($content == null) {
-                    throw new \Exception("NOT VALID COMPOSER.JSON");
-                }
-            }
 
             if (!$this->utilities->fileExistsAndIsInVCS($filePath)) {
                 throw new \Exception($errorMessage);
@@ -86,30 +67,31 @@ class GuidelinesCommandController extends CommandController
         }
     }
 
+    // NOT NEEDED ANYMORE - left here  at first for reference
     /**
      * pass the lint command and filename name to the lint function
      *
      * @return void
      */
-    public function lintCommand()
-    {
+    /* public function lintCommand() */
+    /* { */
 
-        /* @TODO abstrac this because its also needed in editorconfig */
-        foreach ($this->packages as $packageKey => $package) {
-            /* @TODO use a default path */
-            if (!isset($package['path'])) {
-                throw new \Exception('No configuration found for your Package: '
-                    . $packageKey . '.
-                    At least a path must be configured.');
-            }
+    /*     /1* @TODO abstrac this because its also needed in editorconfig *1/ */
+    /*     foreach ($this->packages as $packageKey => $package) { */
+    /*         /1* @TODO use a default path *1/ */
+    /*         if (!isset($package['path'])) { */
+    /*             throw new \Exception('No configuration found for your Package: ' */
+    /*                 . $packageKey . '. */
+    /*                 At least a path must be configured.'); */
+    /*         } */
 
-            $config = $this->getPackageConfigFromKey($packageKey);
+    /*         $config = $this->getPackageConfigFromKey($packageKey); */
 
-            if ($config == null) {
-                throw new \Exception('Something bad happend while loading the config for ' . $packageKey);
-            }
-        }
-    }
+    /*         if ($config == null) { */
+    /*             throw new \Exception('Something bad happend while loading the config for ' . $packageKey); */
+    /*         } */
+    /*     } */
+    /* } */
 
     /**
      * Checks if files implement the .editorconfig rules
@@ -214,6 +196,7 @@ class GuidelinesCommandController extends CommandController
         }
     }
 
+    // NOT NEEDED ANYMORE - left here  at first for reference
     /**
      * Searches for all files with a given filename  which are under VCS
      * and executes a lint script in the directory where the file is
@@ -224,43 +207,66 @@ class GuidelinesCommandController extends CommandController
      * @param string $filename
      * @return void
      */
-    protected function lint($lintCommand, $filename, $mandatoryFile = null)
-    {
-        $files = $this->utilities->getVersionedFiles($filename);
+    /* protected function lint($lintCommand, $filename, $mandatoryFile = null) */
+    /* { */
+    /*     $files = $this->utilities->getVersionedFiles($filename); */
 
-        foreach ($files as $file) {
-            $filePath = $this->utilities->getAbsoluteFileDirectory($file);
-            $command = 'cd ' . $filePath . ' && ' . $lintCommand . ' &> /dev/null';
-            system($command, $lintValue);
+    /*     foreach ($files as $file) { */
+    /*         $filePath = $this->utilities->getAbsoluteFileDirectory($file); */
+    /*         $command = 'cd ' . $filePath . ' && ' . $lintCommand . ' &> /dev/null'; */
+    /*         system($command, $lintValue); */
 
-            if ($lintValue != 0) {
-                throw new \Exception(
-                    'The command: "' . $command . '" returned a non zero exit value'
-                );
-            }
+    /*         if ($lintValue != 0) { */
+    /*             throw new \Exception( */
+    /*                 'The command: "' . $command . '" returned a non zero exit value' */
+    /*             ); */
+    /*         } */
 
-            if ($mandatoryFile != null) {
-                if (!$this->utilities->fileExistsAndIsInVCS($filePath . '/' . $mandatoryFile)) {
-                    throw new \Exception(
-                        'There is no corresponding ' . $mandatoryFile . ' for '  . $file
-                    );
-                }
-            }
-        }
-    }
+    /*         if ($mandatoryFile != null) { */
+    /*             if (!$this->utilities->fileExistsAndIsInVCS($filePath . '/' . $mandatoryFile)) { */
+    /*                 throw new \Exception( */
+    /*                     'There is no corresponding ' . $mandatoryFile . ' for '  . $file */
+    /*                 ); */
+    /*             } */
+    /*         } */
+    /*     } */
+    /* } */
 
+    // NOT NEEDED ANYMORE - left here  at first for reference
     /**
      * Merges the default config with the package config
      *
      * @param string $packageKey
      * @return array
      */
-    protected function getPackageConfigFromKey($packageKey)
+    /* protected function getPackageConfigFromKey($packageKey) */
+    /* { */
+    /*     if (isset($this->packages[$packageKey]['config'])) { */
+    /*         return array_merge($this->packageDefaults, $this->packages[$packageKey]['config']); */
+    /*     } else { */
+    /*         return $this->packageDefaults; */
+    /*     } */
+    /* } */
+
+    /**
+     * Checks if your root composer.json implements the scripts needed
+     * to validate your distribution
+     */
+    protected function checkComposerScripts()
     {
-        if (isset($this->packages[$packageKey]['config'])) {
-            return array_merge($this->packageDefaults, $this->packages[$packageKey]['config']);
-        } else {
-            return $this->packageDefaults;
+        $scripts = $this->distribution['composerScripts'];
+
+        if (file_exists('composer.json')) {
+            $composerJson = json_decode(file_get_contents('composer.json'), true);
+            if ($composerJson == null) {
+                throw new \Exception("Not valid composer.json");
+            }
+
+            foreach ($scripts as $script => $command) {
+                if (!isset($composerJson['scripts'][$script])) {
+                    throw new \Exception('Your composer.json does not have a ' . $script . ' script');
+                }
+            }
         }
     }
 }

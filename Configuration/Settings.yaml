@@ -11,7 +11,7 @@ Sitegeist:
         'Installation': 'No headline Installation in your README.md found'
         'Versionskontrolle': 'No headline Versionskontrolle in your README.md found'
         'Deployment': 'No headline Deployment in your README.md found'
-      php:
+      composerScripts:
         lint: 'composer run-script lint'
         test: 'composer run-script test'
       editorconfig:
