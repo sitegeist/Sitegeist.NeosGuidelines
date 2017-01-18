@@ -9,6 +9,8 @@ namespace Sitegeist\NeosGuidelines\Command;
 use Neos\Flow\Annotations as Flow;
 use Neos\Flow\Cli\CommandController;
 
+/* @TODO GENERAL error handling and error messages */
+/* @TODO GENERAL use flow file stuff */
 /**
  * @Flow\Scope("singleton")
  */
@@ -19,6 +21,18 @@ class GuidelinesCommandController extends CommandController
      * @Flow\InjectConfiguration("distribution")
      */
     protected $distribution;
+
+    /**
+     * @var string
+     * @Flow\InjectConfiguration("packageDefaults")
+     */
+    protected $packageDefaults;
+
+    /**
+     * @var string
+     * @Flow\InjectConfiguration("packages")
+     */
+    protected $packages;
 
     /**
      * @Flow\Inject
@@ -36,7 +50,9 @@ class GuidelinesCommandController extends CommandController
     {
         $this->checkMandatoryFilesCommand();
         $this->checkReadmeCommand();
+
         $this->lintCommand();
+        die;
         $this->checkEditorConfigCommand();
     }
 
@@ -44,6 +60,15 @@ class GuidelinesCommandController extends CommandController
     {
         foreach ($this->distribution['mandatoryFiles'] as $file => $errorMessage) {
             $filePath = $this->utilities->getAbsolutFilePath($file);
+
+            /* @TODO check for script/lint */
+            if ($file == 'composer.json') {
+                $content = json_decode(file_get_contents($filePath));
+                if ($content == null) {
+                    throw new \Exception("NOT VALID COMPOSER.JSON");
+                }
+            }
+
             if (!$this->utilities->fileExistsAndIsInVCS($filePath)) {
                 throw new \Exception($errorMessage);
             }
@@ -68,12 +93,21 @@ class GuidelinesCommandController extends CommandController
      */
     public function lintCommand()
     {
-        foreach ($this->distribution['lint'] as $type => $lintCommand) {
-            $this->lint(
-                $lintCommand,
-                $this->distribution['manifests'][$type],
-                $this->distribution['additionalManifestFiles'][$type]
-            );
+
+        /* @TODO abstrac this because its also needed in editorconfig */
+        foreach ($this->packages as $packageKey => $package) {
+            /* @TODO use a default path */
+            if (!isset($package['path'])) {
+                throw new \Exception('No configuration found for your Package: '
+                    . $packageKey . '.
+                    At least a path must be configured.');
+            }
+
+            $config = $this->getPackageConfigFromKey($packageKey);
+
+            if ($config == null) {
+                throw new \Exception('Something bad happend while loading the config for ' . $packageKey);
+            }
         }
     }
 
@@ -101,6 +135,7 @@ class GuidelinesCommandController extends CommandController
                 }
 
                 // @TODO IMPLEMENT END OF LINE CHECK
+
                 if (isset($formattingRules['end_of_line']) && $formattingRules['end_of_line'] != 1) {
                     $defaultEndOfLine = $formattingRules['end_of_line'];
                 } else {
@@ -184,6 +219,7 @@ class GuidelinesCommandController extends CommandController
      * and executes a lint script in the directory where the file is
      * located
      *
+
      * @param string $lintCommand
      * @param string $filename
      * @return void
@@ -210,6 +246,21 @@ class GuidelinesCommandController extends CommandController
                     );
                 }
             }
+        }
+    }
+
+    /**
+     * Merges the default config with the package config
+     *
+     * @param string $packageKey
+     * @return array
+     */
+    protected function getPackageConfigFromKey($packageKey)
+    {
+        if (isset($this->packages[$packageKey]['config'])) {
+            return array_merge($this->packageDefaults, $this->packages[$packageKey]['config']);
+        } else {
+            return $this->packageDefaults;
         }
     }
 }
