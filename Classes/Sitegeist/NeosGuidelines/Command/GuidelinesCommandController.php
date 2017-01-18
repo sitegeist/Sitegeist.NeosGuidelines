@@ -38,7 +38,8 @@ class GuidelinesCommandController extends CommandController
     {
         $this->checkMandatoryFilesCommand();
         $this->checkReadmeCommand();
-        $this->checkComposerScripts();
+        $this->checkComposerScriptsCommand();
+        $this->checkComposerPlattform();
 
         die;
         $this->lintCommand();
@@ -252,21 +253,38 @@ class GuidelinesCommandController extends CommandController
      * Checks if your root composer.json implements the scripts needed
      * to validate your distribution
      */
-    protected function checkComposerScripts()
+    public function checkComposerScriptsCommand()
     {
         $scripts = $this->distribution['composerScripts'];
+        $composerArray = $this->getComposerJsonArray();
 
+        foreach ($scripts as $script => $command) {
+            if (!isset($composerArray['scripts'][$script])) {
+                throw new \Exception('Your composer.json does not have a ' . $script . ' script');
+            }
+        }
+    }
+
+    protected function checkComposerPlattform() {
+        $composerArray = $this->getComposerJsonArray();
+
+        if (!isset($composerArray['config']['plattform']['php'])) {
+            throw new \Exception("No plattform is defined in your composer.json");
+        }
+    }
+
+    /**
+     * returns the scripts of your composer.json
+     */
+    protected function getComposerJsonArray()
+    {
         if (file_exists('composer.json')) {
-            $composerJson = json_decode(file_get_contents('composer.json'), true);
-            if ($composerJson == null) {
+            $composerArray = json_decode(file_get_contents('composer.json'), true);
+            if ($composerArray == null) {
                 throw new \Exception("Not valid composer.json");
             }
 
-            foreach ($scripts as $script => $command) {
-                if (!isset($composerJson['scripts'][$script])) {
-                    throw new \Exception('Your composer.json does not have a ' . $script . ' script');
-                }
-            }
+            return $composerArray;
         }
     }
 }
