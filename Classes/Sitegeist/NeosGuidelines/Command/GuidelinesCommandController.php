@@ -42,47 +42,26 @@ class GuidelinesCommandController extends CommandController
     public function validateCommand($files = false, $composer = false, $readme = false, $editorconfig = false)
     {
         if ($files) {
-            $this->doValidations('files');
+            $this->checkMandatoryFiles();
         }
 
         if ($composer) {
-            $this->doValidations('composer');
+            $this->checkComposer();
         }
 
         if ($readme) {
-            $this->doValidations('readme');
+            $this->checkReadme();
         }
 
         if ($editorconfig) {
-            $this->doValidations('editorconfig');
+            $this->checkEditorConfig();
         }
 
         if (!$files && !$composer && !$readme && !$editorconfig) {
-            $this->doValidations('all');
-        }
-    }
-
-    protected function doValidations($type)
-    {
-        switch (strtolower($type)) {
-            case 'files':
-                echo 'files';
-                $this->checkMandatoryFiles();
-                break;
-            case 'composer':
-                $this->checkComposer();
-                break;
-            case 'readme':
-                $this->checkReadme();
-                break;
-            case 'editorconfig':
-                $this->checkEditorConfig();
-                break;
-            default:
-                $this->checkMandatoryFiles();
-                $this->checkComposer();
-                $this->checkReadme();
-                $this->checkEditorConfig();
+            $this->checkMandatoryFiles();
+            $this->checkComposer();
+            $this->checkReadme();
+            $this->checkEditorConfig();
         }
     }
 
