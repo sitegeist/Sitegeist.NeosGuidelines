@@ -18,21 +18,39 @@ Add this repository to your composer.json
 
 and run `composer require --dev sitegeist/neosguidelines:dev-master`
 
-This will give you the folling new flow-commands  
---> `./flow guidelines:validate`  
---> `./flow guidelines:lintphp`  
---> `./flow guidelines:lintjavascript`  
+This will give you the following new flow-command
+--> `./flow guidelines:validate`
+
+
+```
+Validate the current project against the Sitegeist Neos Guidelines
+
+COMMAND:
+  sitegeist.neosguidelines:guidelines:validate
+
+USAGE:
+  ./flow guidelines:validate [<options>]
+
+OPTIONS:
+  --files              check mandatory files
+  --composer           validate composer.json and execute lint/test
+  --readme             validate readme file
+  --editorconfig       check if files implement editorconfig rules
+
+DESCRIPTION:
+  If no option is given all checks will be performed
+```
 
 ## Guidelines
+* `--files`:
+    Tests if a `README.md`, `composer.json`, `composer.lock` and `.editorconfig` is in your project root directory.
 
-Currently this command checks if a `README.md`, `composer.lock` and `.editorconfig` file exists and is under version-control via git in your project-root.
-Also it checks if the `README.md` contains the following sections(headlines(#)):
-* Installation
-* Deployment
-* Versionskontrolle
+* `--composer`:
+    Tests if your `composer.json` is valid json, defines a specific php platform and implements a lint and test script and executes them.
 
-__Every composer.json and package.json have to implement a lint scirpt.__   
-The command will search for every `composer.json` and `package.json` in the project and runs a lint command in the directory where the file
-is located.   
-For a `package.json` it runs `npm run lint`
-For a `composer.json` it runs `composer run-script lint`
+* `--readme`:
+    Tests if your `README.md` contains Installation, Versionskontrolle and Deployment as headlines.
+
+* `--editorconfig`:
+    Tests if all files which are under your VCS system implements your editorconfig guidelines
+

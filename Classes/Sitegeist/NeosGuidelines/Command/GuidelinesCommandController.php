@@ -30,7 +30,7 @@ class GuidelinesCommandController extends CommandController
 
     /**
      * Validate the current project against the Sitegeist Neos Guidelines
-     * Composes all other public commands
+     * If no option is given all checks will be performed
      *
      * @param boolean $files check mandatory files
      * @param boolean $composer validate composer.json and execute lint/test
@@ -41,7 +41,6 @@ class GuidelinesCommandController extends CommandController
      */
     public function validateCommand($files = false, $composer = false, $readme = false, $editorconfig = false)
     {
-
         if ($files) {
             $this->doValidations('files');
         }
