@@ -89,7 +89,7 @@ class GuidelinesCommandController extends CommandController
     /**
      * Checks if your composer.json implements our guidelines
      */
-    public function checkComposer()
+    protected function checkComposer()
     {
         $this->checkComposerScripts();
         $this->checkComposerPlattform();
@@ -100,7 +100,7 @@ class GuidelinesCommandController extends CommandController
      *
      * @return void
      */
-    public function checkMandatoryFiles()
+    protected function checkMandatoryFiles()
     {
         foreach ($this->distribution['mandatoryFiles'] as $file => $errorMessage) {
             $filePath = $this->utilities->getAbsolutFilePath($file);
@@ -116,7 +116,7 @@ class GuidelinesCommandController extends CommandController
      *
      * @return void
      */
-    public function checkReadme()
+    protected function checkReadme()
     {
         $readme = file($this->utilities->getAbsolutFilePath($this->distribution['readmeFile']));
         $readme = $this->utilities->getReadmeSections($readme);
@@ -159,7 +159,7 @@ class GuidelinesCommandController extends CommandController
      *
      * @return void
      */
-    public function checkEditorConfig()
+    protected function checkEditorConfig()
     {
         $editorconfig = parse_ini_file('.editorconfig', true);
 
@@ -315,7 +315,7 @@ class GuidelinesCommandController extends CommandController
      *
      * @return void
      */
-    public function checkComposerScripts()
+    protected function checkComposerScripts()
     {
         $scripts = $this->distribution['composerScripts'];
         $composerArray = $this->getComposerJsonArray();
