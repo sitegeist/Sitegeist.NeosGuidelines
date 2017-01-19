@@ -32,26 +32,76 @@ class GuidelinesCommandController extends CommandController
      * Validate the current project against the Sitegeist Neos Guidelines
      * Composes all other public commands
      *
+     * @param boolean $files check mandatory files
+     * @param boolean $composer validate composer.json and execute lint/test
+     * @param boolean $readme validate readme file
+     * @param boolean $editorconfig check if files implement editorconfig rules
+     *
      * @return void
      */
-    public function validateCommand()
+    public function validateCommand($files = false, $composer = false, $readme = false, $editorconfig = false)
     {
-        $this->checkMandatoryFilesCommand();
-        $this->checkReadmeCommand();
-        $this->checkComposerCommand();
 
+        if ($files) {
+            $this->doValidations('files');
+        }
 
-        /* still don't exactly know how to implement this */
-        $this->checkEditorConfigCommand();
+        if ($composer) {
+            $this->doValidations('composer');
+        }
+
+        if ($readme) {
+            $this->doValidations('readme');
+        }
+
+        if ($editorconfig) {
+            $this->doValidations('editorconfig');
+        }
+
+        if (!$files && !$composer && !$readme && !$editorconfig) {
+            $this->doValidations('all');
+        }
     }
 
-    public function checkComposerCommand()
+    protected function doValidations($type)
     {
-        $this->checkComposerScriptsCommand();
+        switch (strtolower($type)) {
+            case 'files':
+                echo 'files';
+                $this->checkMandatoryFiles();
+                break;
+            case 'composer':
+                $this->checkComposer();
+                break;
+            case 'readme':
+                $this->checkReadme();
+                break;
+            case 'editorconfig':
+                $this->checkEditorConfig();
+                break;
+            default:
+                $this->checkMandatoryFiles();
+                $this->checkComposer();
+                $this->checkReadme();
+                $this->checkEditorConfig();
+        }
+    }
+
+    /**
+     * Checks if your composer.json implements our guidelines
+     */
+    public function checkComposer()
+    {
+        $this->checkComposerScripts();
         $this->checkComposerPlattform();
     }
 
-    public function checkMandatoryFilesCommand()
+    /**
+     * Checks if all files needed in your repository are in place and in VCS
+     *
+     * @return void
+     */
+    public function checkMandatoryFiles()
     {
         foreach ($this->distribution['mandatoryFiles'] as $file => $errorMessage) {
             $filePath = $this->utilities->getAbsolutFilePath($file);
@@ -62,7 +112,12 @@ class GuidelinesCommandController extends CommandController
         }
     }
 
-    public function checkReadmeCommand()
+    /**
+     * Checks if your readme file contains the needed sections
+     *
+     * @return void
+     */
+    public function checkReadme()
     {
         $readme = file($this->utilities->getAbsolutFilePath($this->distribution['readmeFile']));
         $readme = $this->utilities->getReadmeSections($readme);
@@ -102,8 +157,10 @@ class GuidelinesCommandController extends CommandController
     /**
      * Checks if files implement the .editorconfig rules
      * As fallback for indention tabs are used
+     *
+     * @return void
      */
-    public function checkEditorConfigCommand()
+    public function checkEditorConfig()
     {
         $editorconfig = parse_ini_file('.editorconfig', true);
 
@@ -255,10 +312,11 @@ class GuidelinesCommandController extends CommandController
     /* } */
 
     /**
-     * Checks if your root composer.json implements the scripts needed
-     * to validate your distribution
+     * Checks if your composer.json implements the scripts needed to validate your distribution
+     *
+     * @return void
      */
-    public function checkComposerScriptsCommand()
+    public function checkComposerScripts()
     {
         $scripts = $this->distribution['composerScripts'];
         $composerArray = $this->getComposerJsonArray();
@@ -270,6 +328,11 @@ class GuidelinesCommandController extends CommandController
         }
     }
 
+    /**
+     * Checks if composer.json imlpements a php platform
+     *
+     * @return void
+     */
     protected function checkComposerPlattform()
     {
         $composerArray = $this->getComposerJsonArray();
@@ -281,6 +344,8 @@ class GuidelinesCommandController extends CommandController
 
     /**
      * returns the scripts of your composer.json
+     *
+     * @return void
      */
     protected function getComposerJsonArray()
     {
