@@ -21,9 +21,9 @@ and run `composer require --dev sitegeist/neosguidelines:dev-master`
 
 ## Configuration
  
- 
-## Guidelines 
- 
+The configuartion is done via Settings in the path `Sitegeist.NeosGuidelines:`
+
+## Enforced Rules 
  
 ### Distribution
  
