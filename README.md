@@ -1,10 +1,9 @@
 # Sitegeist - Neos Guidelines
 
-WIP
+A package to validate projects against our own guidelines.
 
 ## Usage
 
-`./flow guidelines:validate` - validates your neos/flow project against the sitegist-guidelines
 `./flow guidelines:validateDistribution` - validates your neos/flow distribution against the sitegist-guidelines
 `./flow guidelines:validatePackages` - validates your neos/flow packages against the sitegist-guidelines
 
@@ -20,9 +19,6 @@ Add this repository to your composer.json
 
 and run `composer require --dev sitegeist/neosguidelines:dev-master`
 
-This will give you the following new flow-command
---> `./flow guidelines:validate`
-
 ## Configuration
  
  
@@ -31,6 +27,30 @@ This will give you the following new flow-command
  
 ### Distribution
  
+#### Mandatory files
+
+The following files are considered as mandatory.
+
+- 'README.md'
+- 'composer.json'
+- 'composer.lock'
+- '.editorconfig'
+
+#### README.md Sections
+
+The readme file has to contain at least those sections.
+
+- 'Installation'
+- 'Versionskontrolle'
+- 'Deployment'
+
+#### Composer Settings
+ 
+The Composer file has to contain at least those settings.
+ 
+- 'config.platform.php': to ensure that in different environments composer update yields the same result
+- 'scripts.lint'
+- 'scripts.test'
  
 ### Packages 
 
@@ -39,6 +59,12 @@ Hint: The list of packages that is validated is configured with the Setting `pac
 #### Mandatory files
 
 1. composer.json
+
+#### Editorconfig
+
+For all files with a suffix from the list `packages.validators.Editorconfig.options.suffixes` 
+the indent style is validated against the setting in the main .editorconfig``the list 
+`packages.validators.Editorconfig.options.exclude` can be used to exclude items from the list.
  
 #### NodeType - Rules
 
