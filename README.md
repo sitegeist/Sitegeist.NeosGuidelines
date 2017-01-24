@@ -1,10 +1,11 @@
 # Sitegeist - Neos Guidelines
 
-WIP
+A package to validate projects against our own guidelines.
 
 ## Usage
 
-`./flow guidelines:validate` - validates your neos/flow project against our guidelines
+`./flow guidelines:validateDistribution` - validates your neos/flow distribution against the sitegist-guidelines
+`./flow guidelines:validatePackages` - validates your neos/flow packages against the sitegist-guidelines
 
 ## Installation
 
@@ -18,39 +19,122 @@ Add this repository to your composer.json
 
 and run `composer require --dev sitegeist/neosguidelines:dev-master`
 
-This will give you the following new flow-command
---> `./flow guidelines:validate`
+## Configuration
+ 
+ 
+## Guidelines 
+ 
+ 
+### Distribution
+ 
+#### Mandatory files
 
+The following files are considered as mandatory.
 
-```
-Validate the current project against the Sitegeist Neos Guidelines
+- 'README.md'
+- 'composer.json'
+- 'composer.lock'
+- '.editorconfig'
 
-COMMAND:
-  sitegeist.neosguidelines:guidelines:validate
+#### README.md Sections
 
-USAGE:
-  ./flow guidelines:validate [<options>]
+The readme file has to contain at least those sections.
 
-OPTIONS:
-  --files              check mandatory files
-  --composer           validate composer.json and execute lint/test
-  --readme             validate readme file
-  --editorconfig       check if files implement editorconfig rules
+- 'Installation'
+- 'Versionskontrolle'
+- 'Deployment'
 
-DESCRIPTION:
-  If no option is given all checks will be performed
-```
+#### Composer Settings
+ 
+The Composer file has to contain at least those settings.
+ 
+- 'config.platform.php': to ensure that in different environments composer update yields the same result
+- 'scripts.lint'
+- 'scripts.test'
+ 
+### Packages 
 
-## Guidelines
-* `--files`:
-    Tests if a `README.md`, `composer.json`, `composer.lock` and `.editorconfig` is in your project root directory.
+Hint: The list of packages that is validated is configured with the Setting `packages.packageKeys`
 
-* `--composer`:
-    Tests if your `composer.json` is valid json, defines a specific php platform and implements a lint and test script and executes them.
+#### Mandatory files
 
-* `--readme`:
-    Tests if your `README.md` contains Installation, Versionskontrolle and Deployment as headlines.
+1. composer.json
 
-* `--editorconfig`:
-    Tests if all files which are under your VCS system implements your editorconfig guidelines
+#### Editorconfig
 
+For all files with a suffix from the list `packages.validators.Editorconfig.options.suffixes` 
+the indent style is validated against the setting in the main .editorconfig``the list 
+`packages.validators.Editorconfig.options.exclude` can be used to exclude items from the list.
+ 
+#### NodeType - Rules
+
+1. No Empty NodeTypes.*.yaml
+
+   All Configuration files that match NodeTypes.*.yaml actually contain nodeType configurations.
+
+2. Only one NodeTyp is defined per NodeTypes.*.yaml
+
+   The files NodeTypes.*.yaml define exactly one nodeTyoe. This prevents situations where it is hard to find 
+   the defining configuration for nodeTypes because in a single file multiple NodeTypes were declared.
+
+3. All NodeTypes.*.yaml-files start with an allowed prefix.
+
+   The NodeTypes.*.yaml files start with a prefix section that defines the general role for this nodeType. 
+   Allowed prefixes and their intended usese are: 
+   
+   - `Content.*` - NodeTypes that inherit from Neos.Neos:Content and are usually created by Editors on Documents.  
+   - `Document.*` - NodeTypes that inherit from Neos.Neos:Document.
+   - `Mixin.*` - Abstract NodeTypes that defines a set of properties that can be assigned to other NodeTypes.
+   - `Constraint.*` - NodeTypes that inherit from Neos.Neos:Document 
+   - `Collections.*` - NodeTypes a node that can only have specific children. Often used together with `Constraint`-Types.
+   - `Override.*` - NodeTypes-Definitions that override nodeTypes from other packages. 
+
+   Hint: This list can be altered with the Setting `packages.validators.NodeTypes.options.allowedNodeTypePrefixes`
+
+4. NodeTypes.Override.*.yaml overrides nodeTyos configuration of other packages
+
+   The follwing rules 1-3 skipped for those files.
+
+5. NodeTypes have at least oneName Part after the prefix
+
+   The Name part of the NodeType consists of at least one key. This ensures at least soms structure in the 
+   NodeType-Namespace and allows adding deeper name-structure if needed.
+
+6. NodeTypes with a prefix `Mixin`- and `Constraint` are declared abstract
+
+   Hint: This list can be altered with the Setting `packages.validators.NodeTypes.options.abstractNodeTypePrefixes`
+
+7. NodeTypes are named PackageKey:Name
+
+   The Package Key should always be used as namspace part of the nodeTypes.
+
+#### Fusion - Rules
+
+1. All *.Fusion files except Root.fusion define exactly one prototype
+
+   This prevents the writing of prototype definitions that are hard to find again.
+
+2. All *.Fusion files have an allowed Prefix ()
+
+  - `Component` - Presentational component-prototypes that use fusion-properties as only interface to the world.
+  - `Content` - Prototypes that define the rendering of `Content`-NodeTypes
+  - `Document` - Prototypes that define the rendering of `Document`-NodeTypes
+  - `Prototype` - Abstract Prototypes that perform 
+
+Hint: This list can be altered with the Setting `Sitegeist.NeosGuidelines.packages.validators.Fusion.options.abstractNodeTypePrefixes`
+  
+3. All *.Fusion files define a prototype that matches the fileName and path
+
+   To find the definition of a prototype easoily all prototype-names habe to match the filenames. 
+   We do not make an assumption wether the namespace parts are represented by pathes or dots in the 
+   filename and we also ignore an inde.fusion a Namespace part.
+   
+   Examples:
+   
+   -  `Component/Molecule/Link.fusion` -> `prototype(Vendor.Site:Component.Molecule.Link)`
+   -  `Component/Molecule/Link/index.fusion` -> `prototype(Vendor.Site:Component.Molecule.Link)`
+   -  `Component/Molecule/Link.fusion` -> `prototype(Vendor.Site:Component.Molecule.Link)`
+   -  `Component/Teaser/index.fusion` -> `prototype(Vendor.Site:Component.Teaser)`
+   -  `Component/Teaser/Product.fusion` -> `prototype(Vendor.Site:Component.Teaser.Product)`
+   -  `Component/Teaser.Product.fusion` -> `prototype(Vendor.Site:Component.Teaser.Product)`
+   -  `Component/Teaser/Product/index.fusion` -> `prototype(Vendor.Site:Component.Teaser.Product)`

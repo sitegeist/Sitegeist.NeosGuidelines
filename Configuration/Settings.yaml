@@ -1,18 +1,61 @@
 Sitegeist:
   NeosGuidelines:
     distribution:
-      mandatoryFiles:
-        'README.md': 'No README.md file in your project root'
-        'composer.json': 'No composer.json file in your project root'
-        'composer.lock': 'No composer.lock file in your project root'
-        '.editorconfig': 'No .editoroconfig file in your project root'
-      readmeFile: 'README.md'
-      readmeSections:
-        'Installation': 'No headline Installation in your README.md found'
-        'Versionskontrolle': 'No headline Versionskontrolle in your README.md found'
-        'Deployment': 'No headline Deployment in your README.md found'
-      composerScripts:
-        lint: 'composer run-script lint'
-        test: 'composer run-script test'
-      editorconfig:
-        exclude: ['node_modules', 'Public']
+
+      #
+      # the validators that are applied to the distribution
+      #
+      validators:
+
+        MandatoryFiles:
+          validator: Sitegeist\NeosGuidelines\Validators\Distribution\MandatoryFilesDistributionValidator
+          options:
+            files: ['README.md', 'composer.json', 'composer.lock', '.editorconfig']
+
+        ReadmeSections:
+          validator: Sitegeist\NeosGuidelines\Validators\Distribution\MarkdownFileDistributionValidator
+          options:
+            fileName: 'README.md'
+            requiredSections: [ 'Installation', 'Versionskontrolle', 'Deployment']
+
+        Composer:
+          validator: Sitegeist\NeosGuidelines\Validators\Distribution\ComposerFileDistributionValidator
+          options:
+            requiredSettings:
+              - 'config.platform.php'
+              - 'scripts.lint'
+              - 'scripts.test'
+
+    packages:
+
+      #
+      # the list of the packages that should be validated
+      # for testing proposes the neos guideline validate themselves
+      #
+      packageKeys: []
+
+      #
+      # the validators that are applied to each package
+      #
+      validators:
+        MandatoryFiles:
+          validator: Sitegeist\NeosGuidelines\Validators\Package\MandatoryFilesPackageValidator
+          options:
+            files: ['composer.json']
+
+        Editorconfig:
+          validator: Sitegeist\NeosGuidelines\Validators\Package\EditorconfigValidator
+          options:
+            suffixes: ['js', 'json', 'scss', 'css', 'php', 'yaml', 'fusion']
+            exclude: ['node_modules', 'Public']
+
+        NodeTypes:
+          validator: Sitegeist\NeosGuidelines\Validators\Package\NodeTypeValidator
+          options:
+            allowedNodeTypePrefixes: ['Content', 'Document', 'Mixin', 'Constraint', 'Collection', 'Override']
+            abstractNodeTypePrefixes: ['Mixin', 'Constraint']
+
+        Fusion:
+          validator: Sitegeist\NeosGuidelines\Validators\Package\FusionValidator
+          options:
+            allowedFusionPrefixes: ['Content', 'Document', 'Prototype', 'Component']
