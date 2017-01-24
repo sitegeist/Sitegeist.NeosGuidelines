@@ -51,7 +51,7 @@ class EditorconfigValidator extends AbstractPackageValidator
                             $pattern = "/^(\t +)(\\S+.*)?$/um";
                             break;
                         case 'tab':
-                            $pattern = "/^( +)(\\S+.*)?$/um";
+                            $pattern = "/^( {2,})(\\S+.*)?$/um";
                             break;
                         default:
                             $pattern = false;
