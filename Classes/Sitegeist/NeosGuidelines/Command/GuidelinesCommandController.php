@@ -7,10 +7,13 @@ namespace Sitegeist\NeosGuidelines\Command;
  *                                                                        */
 
 use Neos\Flow\Annotations as Flow;
+use Neos\Error\Messages\Result;
 use Neos\Flow\Cli\CommandController;
+use Neos\Utility\Arrays;
 
 /* @TODO GENERAL error handling and error messages */
 /* @TODO GENERAL use flow file stuff */
+
 /**
  * @Flow\Scope("singleton")
  */
@@ -21,6 +24,18 @@ class GuidelinesCommandController extends CommandController
      * @Flow\InjectConfiguration("distribution")
      */
     protected $distribution;
+
+    /**
+     * @var string
+     * @Flow\InjectConfiguration("packages")
+     */
+    protected $packageConfiguration;
+
+    /**
+     * @Flow\Inject
+     * @var \Neos\Flow\ObjectManagement\ObjectManagerInterface
+     */
+    protected $objectManager;
 
     /**
      * @Flow\Inject
@@ -64,6 +79,69 @@ class GuidelinesCommandController extends CommandController
             $this->checkEditorConfig();
         }
     }
+
+    /**
+     * Validate the current project against the Sitegeist-NeosGuidelines
+     *
+     * @return void
+     */
+    public function validateDistributionCommand()
+    {
+    }
+
+
+
+    /**
+     * Validate the given packages against the Sitegeist-NeosGuidelines
+     *
+     * @param string $packageKeys check mandatory files
+     * @return void
+     */
+    public function validatePackagesCommand($packageKeys = null)
+    {
+        if ($packageKeys) {
+            $packageKeyList = Arrays::trimExplode(',',$packageKeys);
+        } else {
+            $packageKeyList = $this->packageConfiguration['packageKeys'];
+        }
+
+        $this->outputLine('<b>Validate Packages ' . implode(', ', $packageKeyList) . '</b>');
+
+        $result = new Result();
+        foreach ($packageKeyList as $packageKeyToValidate) {
+            $result->forProperty($packageKeyToValidate)->merge($this->validatePackage($packageKeyToValidate));
+        }
+
+        if ($result->hasErrors()) {
+            $errors = $result->getFlattenedErrors();
+            $this->outputLine('<b>%d errors were found:</b>', [count($errors)]);
+            /** @var Error $error */
+            foreach ($errors as $path => $pathErrors) {
+                foreach ($pathErrors as $error) {
+                    $this->outputLine(' - %s -> %s', [$path, $error->render()]);
+                }
+            }
+            $this->quit(1);
+        } else {
+            $this->outputLine('<b>All Valid!</b>');
+        }
+    }
+
+    /**
+     * @param $packageKey
+     * @return Result
+     */
+    protected function validatePackage($packageKey) {
+        $result = new Result();
+        $validators = $this->packageConfiguration['validators'];
+        foreach ($validators as $validatorKey => $validatorConfig) {
+            $validator = $this->objectManager->get($validatorConfig['validator']);
+            $validatorResult = $validator->validate($packageKey, $validatorConfig['options']);
+            $result->forProperty($validatorKey)->merge($validatorResult);
+        }
+        return $result;
+    }
+
 
     /**
      * Checks if your composer.json implements our guidelines

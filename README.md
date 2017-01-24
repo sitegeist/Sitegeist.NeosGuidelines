@@ -4,7 +4,9 @@ WIP
 
 ## Usage
 
-`./flow guidelines:validate` - validates your neos/flow project against our guidelines
+`./flow guidelines:validate` - validates your neos/flow project against the sitegist-guidelines
+`./flow guidelines:validateDistribution` - validates your neos/flow distribution against the sitegist-guidelines
+`./flow guidelines:validatePackages` - validates your neos/flow packages against the sitegist-guidelines
 
 ## Installation
 
@@ -21,36 +23,92 @@ and run `composer require --dev sitegeist/neosguidelines:dev-master`
 This will give you the following new flow-command
 --> `./flow guidelines:validate`
 
+## Configuration
+ 
+ 
+## Guidelines 
+ 
+ 
+### Distribution
+ 
+ 
+### Packages 
 
-```
-Validate the current project against the Sitegeist Neos Guidelines
+Hint: The list of packages that is validated is configured with the Setting `packages.packageKeys`
 
-COMMAND:
-  sitegeist.neosguidelines:guidelines:validate
+#### Mandatory files
 
-USAGE:
-  ./flow guidelines:validate [<options>]
+1. composer.json
+ 
+#### NodeType - Rules
 
-OPTIONS:
-  --files              check mandatory files
-  --composer           validate composer.json and execute lint/test
-  --readme             validate readme file
-  --editorconfig       check if files implement editorconfig rules
+1. No Empty NodeTypes.*.yaml
 
-DESCRIPTION:
-  If no option is given all checks will be performed
-```
+   All Configuration files that match NodeTypes.*.yaml actually contain nodeType configurations.
 
-## Guidelines
-* `--files`:
-    Tests if a `README.md`, `composer.json`, `composer.lock` and `.editorconfig` is in your project root directory.
+2. Only one NodeTyp is defined per NodeTypes.*.yaml
 
-* `--composer`:
-    Tests if your `composer.json` is valid json, defines a specific php platform and implements a lint and test script and executes them.
+   The files NodeTypes.*.yaml define exactly one nodeTyoe. This prevents situations where it is hard to find 
+   the defining configuration for nodeTypes because in a single file multiple NodeTypes were declared.
 
-* `--readme`:
-    Tests if your `README.md` contains Installation, Versionskontrolle and Deployment as headlines.
+3. All NodeTypes.*.yaml-files start with an allowed prefix.
 
-* `--editorconfig`:
-    Tests if all files which are under your VCS system implements your editorconfig guidelines
+   The NodeTypes.*.yaml files start with a prefix section that defines the general role for this nodeType. 
+   Allowed prefixes and their intended usese are: 
+   
+   - `Content.*` - NodeTypes that inherit from Neos.Neos:Content and are usually created by Editors on Documents.  
+   - `Document.*` - NodeTypes that inherit from Neos.Neos:Document.
+   - `Mixin.*` - Abstract NodeTypes that defines a set of properties that can be assigned to other NodeTypes.
+   - `Constraint.*` - NodeTypes that inherit from Neos.Neos:Document 
+   - `Collections.*` - NodeTypes a node that can only have specific children. Often used together with `Constraint`-Types.
+   - `Override.*` - NodeTypes-Definitions that override nodeTypes from other packages. 
 
+   Hint: This list can be altered with the Setting `packages.validators.NodeTypes.options.allowedNodeTypePrefixes`
+
+4. NodeTypes.Override.*.yaml overrides nodeTyos configuration of other packages
+
+   The follwing rules 1-3 skipped for those files.
+
+5. NodeTypes have at least oneName Part after the prefix
+
+   The Name part of the NodeType consists of at least one key. This ensures at least soms structure in the 
+   NodeType-Namespace and allows adding deeper name-structure if needed.
+
+6. NodeTypes with a prefix `Mixin`- and `Constraint` are declared abstract
+
+   Hint: This list can be altered with the Setting `packages.validators.NodeTypes.options.abstractNodeTypePrefixes`
+
+7. NodeTypes are named PackageKey:Name
+
+   The Package Key should always be used as namspace part of the nodeTypes.
+
+#### Fusion - Rules
+
+1. All *.Fusion files except Root.fusion define exactly one prototype
+
+   This prevents the writing of prototype definitions that are hard to find again.
+
+2. All *.Fusion files have an allowed Prefix ()
+
+  - `Component` - Presentational component-prototypes that use fusion-properties as only interface to the world.
+  - `Content` - Prototypes that define the rendering of `Content`-NodeTypes
+  - `Document` - Prototypes that define the rendering of `Document`-NodeTypes
+  - `Prototype` - Abstract Prototypes that perform 
+
+Hint: This list can be altered with the Setting `Sitegeist.NeosGuidelines.packages.validators.Fusion.options.abstractNodeTypePrefixes`
+  
+3. All *.Fusion files define a prototype that matches the fileName and path
+
+   To find the definition of a prototype easoily all prototype-names habe to match the filenames. 
+   We do not make an assumption wether the namespace parts are represented by pathes or dots in the 
+   filename and we also ignore an inde.fusion a Namespace part.
+   
+   Examples:
+   
+   -  `Component/Molecule/Link.fusion` -> `prototype(Vendor.Site:Component.Molecule.Link)`
+   -  `Component/Molecule/Link/index.fusion` -> `prototype(Vendor.Site:Component.Molecule.Link)`
+   -  `Component/Molecule/Link.fusion` -> `prototype(Vendor.Site:Component.Molecule.Link)`
+   -  `Component/Teaser/index.fusion` -> `prototype(Vendor.Site:Component.Teaser)`
+   -  `Component/Teaser/Product.fusion` -> `prototype(Vendor.Site:Component.Teaser.Product)`
+   -  `Component/Teaser.Product.fusion` -> `prototype(Vendor.Site:Component.Teaser.Product)`
+   -  `Component/Teaser/Product/index.fusion` -> `prototype(Vendor.Site:Component.Teaser.Product)`

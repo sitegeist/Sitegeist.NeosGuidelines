@@ -16,3 +16,23 @@ Sitegeist:
         test: 'composer run-script test'
       editorconfig:
         exclude: ['node_modules', 'Public']
+    packages:
+      #
+      # the list of the packages that should be validated
+      # for testing proposes the neos guideline validate themselves
+      #
+      packageKeys: []
+      validators:
+        MandatoryFiles:
+          validator: Sitegeist\NeosGuidelines\Validators\Package\MandatoryFilesPackageValidator
+          options:
+            files: ['composer.json']
+        NodeTypes:
+          validator: Sitegeist\NeosGuidelines\Validators\Package\NodeTypeValidator
+          options:
+            allowedNodeTypePrefixes: ['Content', 'Document', 'Mixin', 'Constraint', 'Collection', 'Override']
+            abstractNodeTypePrefixes: ['Mixin', 'Constraint']
+        Fusion:
+          validator: Sitegeist\NeosGuidelines\Validators\Package\FusionValidator
+          options:
+            allowedFusionPrefixes: ['Content', 'Document', 'Prototype', 'Component']
