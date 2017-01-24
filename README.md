@@ -27,7 +27,7 @@ The configuartion is done via Settings in the path `Sitegeist.NeosGuidelines:`
  
 ### Distribution
  
-#### Mandatory files
+#### Distribution - Mandatory files
 
 The following files are considered as mandatory.
 
@@ -36,7 +36,7 @@ The following files are considered as mandatory.
 - 'composer.lock'
 - '.editorconfig'
 
-#### README.md Sections
+#### Distribution - README.md Sections
 
 The readme file has to contain at least those sections.
 
@@ -44,7 +44,7 @@ The readme file has to contain at least those sections.
 - 'Versionskontrolle'
 - 'Deployment'
 
-#### Composer Settings
+#### Distribution - Composer Settings
  
 The Composer file has to contain at least those settings.
  
@@ -56,17 +56,17 @@ The Composer file has to contain at least those settings.
 
 Hint: The list of packages that is validated is configured with the Setting `packages.packageKeys`
 
-#### Mandatory files
+#### Packages - Mandatory files
 
 1. composer.json
 
-#### Editorconfig
+#### Packages - Editorconfig
 
 For all files with a suffix from the list `packages.validators.Editorconfig.options.suffixes` 
 the indent style is validated against the setting in the main .editorconfig``the list 
 `packages.validators.Editorconfig.options.exclude` can be used to exclude items from the list.
  
-#### NodeType - Rules
+#### Packages - NodeType Rules
 
 1. No Empty NodeTypes.*.yaml
 
@@ -108,7 +108,7 @@ the indent style is validated against the setting in the main .editorconfig``the
 
    The Package Key should always be used as namspace part of the nodeTypes.
 
-#### Fusion - Rules
+#### Packages - Fusion Rules
 
 1. All *.Fusion files except Root.fusion define exactly one prototype
 
