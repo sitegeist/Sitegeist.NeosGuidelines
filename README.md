@@ -4,8 +4,8 @@ A package to validate projects against our own guidelines.
 
 ## Usage
 
-`./flow guidelines:validateDistribution` - validates your neos/flow distribution against the sitegist-guidelines
-`./flow guidelines:validatePackages` - validates your neos/flow packages against the sitegist-guidelines
+- `./flow guidelines:validateDistribution` - validates your neos/flow distribution against the sitegist-guidelines
+- `./flow guidelines:validatePackages` - validates your neos/flow packages against the sitegist-guidelines
 
 ## Installation
 
