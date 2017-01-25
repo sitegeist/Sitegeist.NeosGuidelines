@@ -1,13 +1,18 @@
 {
     "name": "sitegeist/neosguidelines",
-    "type": "typo3-flow-package",
-    "description": "Add description here",
-    "version": "0.0.1",
+    "type": "neos-package",
+    "description": "A package to validate projects against the sitegeist-project-guidelines.",
+    "license": "GPL-3.0+",
     "authors": [
         {
             "name": "Max Strübing",
             "email": "struebing@sitegeist.de",
             "role": "Developer"
+        },
+        {
+          "name": "Martin Ficzel",
+          "email": "ficzel@sitegeist.de",
+          "role": "Developer"
         }
     ],
     "require": {

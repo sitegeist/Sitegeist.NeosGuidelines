@@ -1,6 +1,14 @@
 # Sitegeist - Neos Guidelines
 
-A package to validate projects against our own guidelines.
+A package to validate projects against the sitegeist-project-guidelines.
+
+### Authors & Sponsors
+
+* Max Strübing - struebing@sitegeist.de
+* Martin Ficzel - ficzel@sitegeist.de
+
+*The development and the public-releases of this package is generously sponsored
+by our employer http://www.sitegeist.de.*
 
 ## Usage
 
