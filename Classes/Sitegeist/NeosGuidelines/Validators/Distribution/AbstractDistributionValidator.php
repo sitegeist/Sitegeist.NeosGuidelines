@@ -24,7 +24,8 @@ abstract class AbstractDistributionValidator
      * @param mixed $options
      * @return Result
      */
-    public function validate($options = []) {
+    public function validate($options = [])
+    {
         return $this->validateDistribution($options);
     }
 

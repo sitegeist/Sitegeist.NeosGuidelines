@@ -17,10 +17,11 @@ class MandatoryFilesPackageValidator extends AbstractPackageValidator
     public function validatePackage($package, $options)
     {
         $result = new Result();
-        if ($options['files'] && is_array($options['files'] )) {
+        if ($options['files'] && is_array($options['files'])) {
             foreach ($options['files'] as $file) {
-                if(!file_exists( $package->getPackagePath() . $file)) {
-                    $result->forProperty($file)->addError(new Error(sprintf('Expected file %s is missing in package %s', $file, $package->getPackageKey())));
+                if (!file_exists($package->getPackagePath() . $file)) {
+                    $message = sprintf('Expected file %s is missing in package %s', $file, $package->getPackageKey());
+                    $result->forProperty($file)->addError(new Error($message));
                 }
             }
         }

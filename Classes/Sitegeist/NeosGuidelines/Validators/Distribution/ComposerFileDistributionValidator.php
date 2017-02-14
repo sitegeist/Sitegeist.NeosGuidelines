@@ -18,13 +18,13 @@ class ComposerFileDistributionValidator extends AbstractDistributionValidator
         $result = new Result();
 
         $composerConfiguration = json_decode(file_get_contents(FLOW_PATH_ROOT . 'composer.json'), true);
-        if ($options['requiredSettings'] && is_array($options['requiredSettings'] )) {
-
+        if ($options['requiredSettings'] && is_array($options['requiredSettings'])) {
             // required settings
             foreach ($options['requiredSettings'] as $requiredSetting) {
                 $value = Arrays::getValueByPath($composerConfiguration, $requiredSetting);
                 if (is_null($value)) {
-                    $result->forProperty($requiredSetting)->addError(new Error(sprintf('Composer-setting %s is missing', $requiredSetting)));
+                    $message = sprintf('Composer-setting %s is missing', $requiredSetting);
+                    $result->forProperty($requiredSetting)->addError(new Error($message));
                 }
             }
         }

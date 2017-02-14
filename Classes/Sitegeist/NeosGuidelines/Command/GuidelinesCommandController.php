@@ -71,7 +71,7 @@ class GuidelinesCommandController extends CommandController
     public function validatePackagesCommand($packageKeys = null)
     {
         if ($packageKeys) {
-            $packageKeyList = Arrays::trimExplode(',',$packageKeys);
+            $packageKeyList = Arrays::trimExplode(',', $packageKeys);
         } else {
             $packageKeyList = $this->packageConfiguration['packageKeys'];
         }
@@ -102,7 +102,8 @@ class GuidelinesCommandController extends CommandController
      * @param $packageKey
      * @return Result
      */
-    protected function validateDistribution() {
+    protected function validateDistribution()
+    {
         $result = new Result();
         $validators = $this->distributionConfiguration['validators'];
         foreach ($validators as $validatorKey => $validatorConfig) {
@@ -117,7 +118,8 @@ class GuidelinesCommandController extends CommandController
      * @param $packageKey
      * @return Result
      */
-    protected function validatePackage($packageKey) {
+    protected function validatePackage($packageKey)
+    {
         $result = new Result();
         $validators = $this->packageConfiguration['validators'];
         foreach ($validators as $validatorKey => $validatorConfig) {

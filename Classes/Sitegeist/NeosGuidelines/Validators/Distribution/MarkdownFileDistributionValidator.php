@@ -19,10 +19,11 @@ class MarkdownFileDistributionValidator extends AbstractDistributionValidator
         $fileContent = file_get_contents(FLOW_PATH_ROOT . $file);
 
 
-        if ($options['requiredSections'] && is_array($options['requiredSections'] )) {
+        if ($options['requiredSections'] && is_array($options['requiredSections'])) {
             foreach ($options['requiredSections'] as $section) {
-                if (!preg_match('/#+\s*(' . trim($section) . ')/um', $fileContent )) {
-                    $result->forProperty($section)->addError(new Error(sprintf('Markdown file %s is missing section %s', $file, $section)));
+                if (!preg_match('/#+\s*(' . trim($section) . ')/um', $fileContent)) {
+                    $message = sprintf('Markdown file %s is missing section %s', $file, $section);
+                    $result->forProperty($section)->addError(new Error($message));
                 }
             }
         }

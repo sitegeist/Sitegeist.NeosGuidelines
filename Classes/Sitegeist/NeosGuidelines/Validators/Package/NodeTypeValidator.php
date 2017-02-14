@@ -24,8 +24,7 @@ class NodeTypeValidator extends AbstractPackageValidator
         $configurationFiles = Files::readDirectoryRecursively($configurationPath, 'yaml');
         foreach ($configurationFiles as $configurationFile) {
             if (strpos($configurationFile, $configurationPath . 'NodeTypes.') === 0) {
-
-                $name = substr($configurationFile,  strlen($configurationPath . 'NodeTypes.'),  -1 * strlen('.yaml') );
+                $name = substr($configurationFile, strlen($configurationPath . 'NodeTypes.'), -1 * strlen('.yaml'));
                 $nameParts = explode('.', $name);
 
                 $configuration = Yaml::parse($configurationFile);
@@ -43,7 +42,8 @@ class NodeTypeValidator extends AbstractPackageValidator
                 if (count($configuration) !== 1) {
                     $result->forProperty($name)->addError(new Error(sprintf(
                         '%s NodeTypes found in file %s. Exactly one nodetype per file is expected',
-                        count($configuration), $name
+                        count($configuration),
+                        $name
                     )));
                 }
 
@@ -53,7 +53,9 @@ class NodeTypeValidator extends AbstractPackageValidator
                     if (!in_array($nameParts[0], $allowedNodeTypePrefixes)) {
                         $result->forProperty($name)->addError(new Error(sprintf(
                             'NodeType %s in file %s does not start with one of those prefixes %s',
-                            $name, $name, implode(',', $allowedNodeTypePrefixes)
+                            $name,
+                            $name,
+                            implode(',', $allowedNodeTypePrefixes)
                         )));
                     }
                 }
@@ -64,7 +66,8 @@ class NodeTypeValidator extends AbstractPackageValidator
                     if (strpos($package->getPackageKey(), $nodeTypeName) === 0) {
                         $result->forProperty($name)->addError(new Error(sprintf(
                             'Override-NodeType %s in file %s should override NodeTypes in foreign package namespace.',
-                            $nodeTypeName, $name
+                            $nodeTypeName,
+                            $name
                         )));
                     }
                     // skip the following rules for Override
@@ -75,17 +78,21 @@ class NodeTypeValidator extends AbstractPackageValidator
                 if (count($nameParts) < 2) {
                     $result->forProperty($name)->addError(new Error(sprintf(
                         'NodeType %s in file %s is not seperated in Prefix.Name',
-                        $name, $name
+                        $name,
+                        $name
                     )));
                 }
 
                 // Abstract NodeTypes are declacred abstract
                 $abstractNodeTypePrefixes = $options['abstractNodeTypePrefixes'];
                 if (!empty($abstractNodeTypePrefixes)) {
-                    if (in_array($nameParts[0], $abstractNodeTypePrefixes) && (!array_key_exists('abstract', $configuration) || $configuration['abstract'] !== FALSE)) {
+                    if (in_array($nameParts[0], $abstractNodeTypePrefixes)
+                        && (!array_key_exists('abstract', $configuration) || $configuration['abstract'] !== false)
+                    ) {
                         $result->forProperty($name)->addError(new Error(sprintf(
                             'NodeType %s with one of those prefixes %s have to be abstract',
-                            $name, implode(',', $abstractNodeTypePrefixes)
+                            $name,
+                            implode(',', $abstractNodeTypePrefixes)
                         )));
                     }
                 }
@@ -95,11 +102,11 @@ class NodeTypeValidator extends AbstractPackageValidator
                 if (!array_key_exists($expectedNodeType, $configuration)) {
                     $result->forProperty($name)->addError(new Error(sprintf(
                         'Expected NodeType %s in file %s but found %s',
-                        $expectedNodeType, $name, implode(',',array_keys($configuration))
+                        $expectedNodeType,
+                        $name,
+                        implode(',', array_keys($configuration))
                     )));
                 }
-
-
             }
         }
         return $result;

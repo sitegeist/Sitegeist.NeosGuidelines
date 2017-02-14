@@ -1,10 +1,9 @@
 <?php
 namespace Sitegeist\NeosGuidelines\Utility;
 
-
 class Editorconfig
 {
-    static public function validateFile ($filename, $editotconfig) {
-
+    public static function validateFile($filename, $editotconfig)
+    {
     }
 }

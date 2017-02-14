@@ -43,12 +43,6 @@ Sitegeist:
           options:
             files: ['composer.json']
 
-        Editorconfig:
-          validator: Sitegeist\NeosGuidelines\Validators\Package\EditorconfigValidator
-          options:
-            suffixes: ['js', 'json', 'scss', 'css', 'php', 'yaml', 'fusion']
-            exclude: ['node_modules', 'Public']
-
         NodeTypes:
           validator: Sitegeist\NeosGuidelines\Validators\Package\NodeTypeValidator
           options:

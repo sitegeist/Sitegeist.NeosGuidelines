@@ -25,7 +25,8 @@ abstract class AbstractPackageValidator
      * @param mixed $options
      * @return Result
      */
-    public function validate($packageKey, $options = []) {
+    public function validate($packageKey, $options = [])
+    {
         $package = $this->packageManager->getPackage($packageKey);
         return $this->validatePackage($package, $options);
     }

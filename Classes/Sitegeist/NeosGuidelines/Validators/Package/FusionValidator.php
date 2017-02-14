@@ -30,24 +30,24 @@ class FusionValidator extends AbstractPackageValidator
         $fusionParser = new Parser();
 
         foreach ($fusionFiles as $fusionFile) {
-
             // exclude Root.fusion
             if ($fusionFile == $package->getResourcesPath() . 'Private/Fusion/Root.fusion') {
                 continue;
             }
 
-            $name = substr($fusionFile,  strlen($fusionPath) + 1);
-            $name = str_replace('/' , '.', $name);
+            $name = substr($fusionFile, strlen($fusionPath) + 1);
+            $name = str_replace('/', '.', $name);
             $name = preg_replace("/(\\.index)?.fusion$/us", "", $name);
-            $nameParts = explode('.' , $name);
+            $nameParts = explode('.', $name);
 
             $fusionAst = $fusionParser->parse(file_get_contents($fusionFile));
 
             // Empty Fusion
-            if (empty($fusionAst) || empty($fusionAst['__prototypes']) ) {
+            if (empty($fusionAst) || empty($fusionAst['__prototypes'])) {
                 $result->forProperty($name)->addError(new Error(sprintf(
                     'No fusion prototypes found in file %s in package %s',
-                    $name, $package->getPackageKey()
+                    $name,
+                    $package->getPackageKey()
                 )));
                 continue;
             }
@@ -56,7 +56,9 @@ class FusionValidator extends AbstractPackageValidator
             if (count($fusionAst['__prototypes']) !== 1) {
                 $result->forProperty($name)->addError(new Error(sprintf(
                     '%s Prototypes found in file %s and package %s. Exactly one prototype per file is expected',
-                    count($fusionAst['__prototypes']), $name, $package->getPackageKey()
+                    count($fusionAst['__prototypes']),
+                    $name,
+                    $package->getPackageKey()
                 )));
             }
 
@@ -66,7 +68,8 @@ class FusionValidator extends AbstractPackageValidator
                 if (!in_array($nameParts[0], $allowedFusionPrefixes)) {
                     $result->forProperty($name)->addError(new Error(sprintf(
                         'Prototype %s in file does not start with one of those prefixes %s',
-                        $name, implode(',', $allowedFusionPrefixes)
+                        $name,
+                        implode(',', $allowedFusionPrefixes)
                     )));
                 }
             }
@@ -78,7 +81,9 @@ class FusionValidator extends AbstractPackageValidator
             if ($prototypePath !== implode('.', $nameParts)) {
                 $result->forProperty($name)->addError(new Error(sprintf(
                     'Prototype %s in file %s does not match the expected name %s',
-                    $prototypeName, $name, $prototypeNamespace . ':' . implode('.', $nameParts)
+                    $prototypeName,
+                    $name,
+                    $prototypeNamespace . ':' . implode('.', $nameParts)
                 )));
             }
         }

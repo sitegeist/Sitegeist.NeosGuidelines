@@ -12,13 +12,14 @@ class MandatoryFilesDistributionValidator extends AbstractDistributionValidator
      * @param mixed $options
      * @return Result
      */
-    public function validateDistribution( $options)
+    public function validateDistribution($options)
     {
         $result = new Result();
-        if ($options['files'] && is_array($options['files'] )) {
+        if ($options['files'] && is_array($options['files'])) {
             foreach ($options['files'] as $file) {
-                if(!file_exists( FLOW_PATH_ROOT . $file)) {
-                    $result->forProperty($file)->addError(new Error(sprintf('Expected file %s is missing in distribution', $file)));
+                if (!file_exists(FLOW_PATH_ROOT . $file)) {
+                    $message = sprintf('Expected file %s is missing in distribution', $file);
+                    $result->forProperty($file)->addError(new Error($message));
                 }
             }
         }
