@@ -29,13 +29,14 @@ and run `composer require --dev sitegeist/neosguidelines:dev-master`
 
 ## Configuration
  
-The configuartion is done via Settings in the path `Sitegeist.NeosGuidelines:`
+The configuration is done via settings in the path `Sitegeist.NeosGuidelines:`
 
 ## Documentation
  
--  [Neos - Installation Requirements](Documentation/InstallationRequirements.md)
--  [Neos - Distribution Requirements](Documentation/DistributionRequirements.md)
--  [Neos - Package Requirements](Documentation/PackageRequirements.md)
+- [Neos - Installation Requirements](Documentation/InstallationRequirements.md)
+- [Neos - Distribution Requirements](Documentation/DistributionRequirements.md)
+- [Neos - Package Requirements](Documentation/PackageRequirements.md)
+
 
  
 
