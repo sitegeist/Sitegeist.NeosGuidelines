@@ -1,4 +1,4 @@
-# Installation Requirements
+# Neos - Installation Requirements
 
 There is no test to validate this requirements for now.
 

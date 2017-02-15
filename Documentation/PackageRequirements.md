@@ -1,4 +1,4 @@
-# Packages 
+# Neos -  Package Requirements
 
 `./flow guidelines:validatePackages` - validates your neos/flow packages against the sitegist-guidelines
 

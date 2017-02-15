@@ -1,4 +1,4 @@
-# Distribution Requirements
+# Neos - Distribution Requirements
 
 `./flow guidelines:validateDistribution` - validates your neos/flow distribution against the sitegist-guidelines
  

@@ -33,9 +33,9 @@ The configuartion is done via Settings in the path `Sitegeist.NeosGuidelines:`
 
 ## Documentation
  
--  [InstallationRequirements](Documentation/InstallationRequirements.md)
--  [DistributionRequirements](Documentation/DistributionRequirements.md)
--  [PackageRequirements](Documentation/PackageRequirements.md)
+-  [Neos - Installation Requirements](Documentation/InstallationRequirements.md)
+-  [Neos - Distribution Requirements](Documentation/DistributionRequirements.md)
+-  [Neos - Package Requirements](Documentation/PackageRequirements.md)
 
  
 
