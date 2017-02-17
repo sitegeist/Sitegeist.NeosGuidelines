@@ -83,17 +83,20 @@ class NodeTypeValidator extends AbstractPackageValidator
                     )));
                 }
 
-                // Abstract NodeTypes are declacred abstract
+                // Abstract NodeTypes are declared abstract
                 $abstractNodeTypePrefixes = $options['abstractNodeTypePrefixes'];
                 if (!empty($abstractNodeTypePrefixes)) {
-                    if (in_array($nameParts[0], $abstractNodeTypePrefixes)
-                        && (!array_key_exists('abstract', $configuration) || $configuration['abstract'] !== false)
-                    ) {
-                        $result->forProperty($name)->addError(new Error(sprintf(
-                            'NodeType %s with one of those prefixes %s have to be abstract',
-                            $name,
-                            implode(',', $abstractNodeTypePrefixes)
-                        )));
+                    if (in_array($nameParts[0], $abstractNodeTypePrefixes)) {
+                        $nodeTypeConfiguration = $configuration[array_keys($configuration)[0]];
+                        if (!array_key_exists('abstract', $nodeTypeConfiguration)
+                            || $nodeTypeConfiguration['abstract'] == false
+                        ) {
+                            $result->forProperty($name)->addError(new Error(sprintf(
+                                'NodeType %s with one of those prefixes %s have to be abstract',
+                                $name,
+                                implode(',', $abstractNodeTypePrefixes)
+                            )));
+                        }
                     }
                 }
 
