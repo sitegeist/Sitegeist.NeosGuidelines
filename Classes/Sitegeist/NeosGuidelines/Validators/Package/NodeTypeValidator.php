@@ -74,15 +74,6 @@ class NodeTypeValidator extends AbstractPackageValidator
                     continue;
                 }
 
-                // NodeTypes have a name part after the prefix
-                if (count($nameParts) < 2) {
-                    $result->forProperty($name)->addError(new Error(sprintf(
-                        'NodeType %s in file %s is not seperated in Prefix.Name',
-                        $name,
-                        $name
-                    )));
-                }
-
                 // Abstract NodeTypes are declared abstract
                 $abstractNodeTypePrefixes = $options['abstractNodeTypePrefixes'];
                 if (!empty($abstractNodeTypePrefixes)) {

@@ -43,16 +43,11 @@ the indent style is validated against the setting in the main .editorconfig``the
 
    The follwing rules 1-3 skipped for those files.
 
-5. NodeTypes have at least oneName Part after the prefix
-
-   The Name part of the NodeType consists of at least one key. This ensures at least soms structure in the 
-   NodeType-Namespace and allows adding deeper name-structure if needed.
-
-6. NodeTypes with a prefix `Mixin`- and `Constraint` are declared abstract
+5. NodeTypes with a prefix `Mixin`- and `Constraint` are declared abstract
 
    Hint: This list can be altered with the Setting `packages.validators.NodeTypes.options.abstractNodeTypePrefixes`
 
-7. NodeTypes are named PackageKey:Name
+6. NodeTypes are named PackageKey:Name
 
    The Package Key should always be used as namspace part of the nodeTypes.
 
