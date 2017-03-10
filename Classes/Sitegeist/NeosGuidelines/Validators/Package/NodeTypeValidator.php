@@ -62,7 +62,7 @@ class NodeTypeValidator extends AbstractPackageValidator
 
                 // Override NodeTypes are defining stuff for other packages
                 if ($nameParts[0] === 'Override') {
-                    $nodeTypeName = arrray_keys($configuration)[0];
+                    $nodeTypeName = array_keys($configuration)[0];
                     if (strpos($package->getPackageKey(), $nodeTypeName) === 0) {
                         $result->forProperty($name)->addError(new Error(sprintf(
                             'Override-NodeType %s in file %s should override NodeTypes in foreign package namespace.',
