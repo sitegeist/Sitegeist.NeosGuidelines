@@ -52,4 +52,5 @@ Sitegeist:
         Fusion:
           validator: Sitegeist\NeosGuidelines\Validators\Package\FusionValidator
           options:
+            filenameExceptions: ['Root.fusion', 'Shame.fusion']
             allowedFusionPrefixes: ['Content', 'Document', 'Prototype', 'Component']

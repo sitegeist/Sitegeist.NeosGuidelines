@@ -30,23 +30,23 @@ class FusionValidator extends AbstractPackageValidator
         $fusionParser = new Parser();
 
         foreach ($fusionFiles as $fusionFile) {
-            // exclude Root.fusion
-            if ($fusionFile == $package->getResourcesPath() . 'Private/Fusion/Root.fusion') {
+
+            $localName = substr($fusionFile, strlen($fusionPath) + 1);
+            $localDirName = pathinfo($localName, PATHINFO_DIRNAME);
+            $localFileName = pathinfo($localName, PATHINFO_FILENAME);
+
+            // handle exclusion rules
+            if (in_array($localName, $options['filenameExceptions'])) {
                 continue;
             }
 
-            $name = substr($fusionFile, strlen($fusionPath) + 1);
-            $name = str_replace('/', '.', $name);
-            $name = preg_replace("/(\\.index)?.fusion$/us", "", $name);
-            $nameParts = explode('.', $name);
+            $fusionAst = $fusionParser->parse(file_get_contents($fusionFile), $fusionFile);
 
-            $fusionAst = $fusionParser->parse(file_get_contents($fusionFile));
-
-            // Empty Fusion
-            if (empty($fusionAst) || empty($fusionAst['__prototypes'])) {
-                $result->forProperty($name)->addError(new Error(sprintf(
+            // no empty Fusion
+            if (empty($fusionAst) || array_key_exists('__prototypes', $fusionAst) == false || empty($fusionAst['__prototypes'])) {
+                $result->forProperty($localName)->addError(new Error(sprintf(
                     'No fusion prototypes found in file %s in package %s',
-                    $name,
+                    $localName,
                     $package->getPackageKey()
                 )));
                 continue;
@@ -54,36 +54,78 @@ class FusionValidator extends AbstractPackageValidator
 
             // Every fusion defines exactly one prototype
             if (count($fusionAst['__prototypes']) !== 1) {
-                $result->forProperty($name)->addError(new Error(sprintf(
+                $result->forProperty($localName)->addError(new Error(sprintf(
                     '%s Prototypes found in file %s and package %s. Exactly one prototype per file is expected',
                     count($fusionAst['__prototypes']),
-                    $name,
+                    $localName,
                     $package->getPackageKey()
                 )));
+                continue;
             }
+
+            // detect the prototype of the current fusion file
+            $prototypeName = array_keys($fusionAst['__prototypes'])[0];
+            list($prototypeNamespace, $prototypePath) = explode(':', $prototypeName, 2);
+            $prototypeNamespaceParts = explode('.', $prototypeNamespace);
+            $prototypeNameParts = explode('.', $prototypePath);
 
             // The Fusion files define prototypes in the allowed prefix
             $allowedFusionPrefixes = $options['allowedFusionPrefixes'];
             if (!empty($allowedFusionPrefixes)) {
-                if (!in_array($nameParts[0], $allowedFusionPrefixes)) {
-                    $result->forProperty($name)->addError(new Error(sprintf(
+                if (!in_array($prototypeNameParts[0], $allowedFusionPrefixes)) {
+                    $result->forProperty($localName)->addError(new Error(sprintf(
                         'Prototype %s in file does not start with one of those prefixes %s',
-                        $name,
+                        $localName,
                         implode(',', $allowedFusionPrefixes)
                     )));
                 }
             }
 
-            $prototypeName = array_keys($fusionAst['__prototypes'])[0];
-            list($prototypeNamespace, $prototypePath) = explode(':', $prototypeName, 2);
+            // the dirname represents the start of the prototype-name
+            //
+            $namespaceDirMatchCount = 0;
+            $fileDirParts = explode('/', $localDirName);
+            foreach ($fileDirParts as $key => $fileDirPart) {
+                if ($prototypeNameParts[$key] == $fileDirPart) {
+                    $namespaceDirMatchCount ++;
+                } else {
+                    $result->forProperty($localName)->addError(new Error(sprintf(
+                        'Prototype-name %s is not represented in directory %s',
+                        $prototypeName,
+                        $localDirName
+                    )));
+                    break;
+                }
+            }
 
-            // Prototypes are named as their fusion-file
-            if ($prototypePath !== implode('.', $nameParts)) {
-                $result->forProperty($name)->addError(new Error(sprintf(
-                    'Prototype %s in file %s does not match the expected name %s',
+            // the filename represents the end of the prototype-name
+            //
+            $namespaceFileMatchCount = 0;
+            $fileNameParts = explode('.', $localFileName);
+            $fileNamePartsInverse = array_reverse($fileNameParts);
+            foreach ($fileNamePartsInverse as $key => $fileNamePart) {
+                if ($fileNamePart == 'index' && $key == 0) {
+                    // ignore index
+                } elseif ($prototypeNameParts[count($prototypeNameParts) - 1 - $key] == $fileNamePart) {
+                    $namespaceFileMatchCount ++;
+                } else {
+                    $result->forProperty($localName)->addError(new Error(sprintf(
+                        'Prototype-name %s is not represented in filename %s',
+                        $prototypeName,
+                        $localFileName
+                    )));
+                    break;
+                }
+            }
+
+            // the filename and dirname together represents the whole prototype-name
+            //
+            if (($namespaceDirMatchCount + $namespaceFileMatchCount) < count($prototypeNameParts)) {
+                $result->forProperty($localName)->addError(new Error(sprintf(
+                    'Prototype-name %s is not fully represented by directory %s and filename %s',
                     $prototypeName,
-                    $name,
-                    $prototypeNamespace . ':' . implode('.', $nameParts)
+                    $localDirName,
+                    $localFileName
                 )));
             }
         }

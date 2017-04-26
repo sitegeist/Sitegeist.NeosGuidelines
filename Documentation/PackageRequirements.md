@@ -53,11 +53,18 @@ the indent style is validated against the setting in the main .editorconfig``the
 
 ## Packages - Fusion Rules
 
-1. All *.Fusion files except Root.fusion define exactly one prototype
+All `*.fusion`-files are validated by the following rules with the exception of:
+ 
+  - `Root.fusion`
+  - `Shame.fusion`
+ 
+Hint: This list can be altered with the Setting `Sitegeist.NeosGuidelines.packages.validators.Fusion.options.filenameExceptions`
+
+1. All `*.fusion`-files define exactly one prototype
 
    This prevents the writing of prototype definitions that are hard to find again.
 
-2. All *.Fusion files have an allowed Prefix ()
+2. All fusion-prototypes in the `*.fusion`-file have an allowed prefix 
 
   - `Component` - Presentational component-prototypes that use fusion-properties as only interface to the world.
   - `Content` - Prototypes that define the rendering of `Content`-NodeTypes
@@ -66,18 +73,25 @@ the indent style is validated against the setting in the main .editorconfig``the
 
 Hint: This list can be altered with the Setting `Sitegeist.NeosGuidelines.packages.validators.Fusion.options.abstractNodeTypePrefixes`
   
-3. All *.Fusion files define a prototype that matches the fileName and path
+3. The dirname of the `*.fusion`-file represents the beginning of the prototype-name
 
-   To find the definition of a prototype easoily all prototype-names habe to match the filenames. 
-   We do not make an assumption wether the namespace parts are represented by pathes or dots in the 
-   filename and we also ignore an inde.fusion a Namespace part.
-   
-   Examples:
-   
-   -  `Component/Molecule/Link.fusion` -> `prototype(Vendor.Site:Component.Molecule.Link)`
-   -  `Component/Molecule/Link/index.fusion` -> `prototype(Vendor.Site:Component.Molecule.Link)`
-   -  `Component/Molecule/Link.fusion` -> `prototype(Vendor.Site:Component.Molecule.Link)`
-   -  `Component/Teaser/index.fusion` -> `prototype(Vendor.Site:Component.Teaser)`
-   -  `Component/Teaser/Product.fusion` -> `prototype(Vendor.Site:Component.Teaser.Product)`
-   -  `Component/Teaser.Product.fusion` -> `prototype(Vendor.Site:Component.Teaser.Product)`
-   -  `Component/Teaser/Product/index.fusion` -> `prototype(Vendor.Site:Component.Teaser.Product)`
+   To find the definition of a prototype easily all fusion files must be placed in directories 
+   that match the start of the prototype-name with `/` replacing the `.`.
+
+4. The filename of the `*.fusion`-file represents the end of the prototype-name or is `index 
+ 
+   To find the definition of a prototype easily all the names of the `*.fusion`-file must represent the 
+   end of the fusion-prototype name. In addition `index.fusion` is also considered a valid fusion-filename.   
+
+5. Together dirname and filename represent the whole prototype-name
+
+   We do not make an assumption wether the prototype-name is represented by filename, directory or both,
+   we only ensure the prototype-name is fully represented.
+
+Examples for valid filenames for the prototype `Vendor.Site:Blog.Document`:
+
+ -  `Blog.Document.fusion`
+ -  `Blog/Document.fusion`
+ -  `Blog/Document/index.fusion`
+ -  `Blog/Document/Document.fusion`
+ -  `Blog/Document/Blog.Document.fusion`
