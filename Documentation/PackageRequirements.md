@@ -58,7 +58,7 @@ All `*.fusion`-files are validated by the following rules with the exception of:
   - `Root.fusion`
   - `Shame.fusion`
  
-Hint: This list can be altered with the Setting `Sitegeist.NeosGuidelines.packages.validators.Fusion.options.filenameExceptions`
+Hint: This list can be altered with the Setting `packages.validators.Fusion.options.filenameExceptions`
 
 1. All `*.fusion`-files define exactly one prototype
 
@@ -71,7 +71,7 @@ Hint: This list can be altered with the Setting `Sitegeist.NeosGuidelines.packag
   - `Document` - Prototypes that define the rendering of `Document`-NodeTypes
   - `Prototype` - Abstract Prototypes that perform 
 
-Hint: This list can be altered with the Setting `Sitegeist.NeosGuidelines.packages.validators.Fusion.options.abstractNodeTypePrefixes`
+Hint: This list can be altered with the Setting `packages.validators.Fusion.options.abstractNodeTypePrefixes`
   
 3. The dirname of the `*.fusion`-file represents the beginning of the prototype-name
 

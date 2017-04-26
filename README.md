@@ -25,7 +25,7 @@ Add this repository to your composer.json
     }],
 ```
 
-and run `composer require --dev sitegeist/neosguidelines:dev-master`
+and run `composer require --dev sitegeist/neosguidelines`
 
 ## Configuration
  
