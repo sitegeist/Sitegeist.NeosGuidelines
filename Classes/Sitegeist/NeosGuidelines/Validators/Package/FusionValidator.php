@@ -36,7 +36,7 @@ class FusionValidator extends AbstractPackageValidator
             $localFileName = pathinfo($localName, PATHINFO_FILENAME);
 
             // handle exclusion rules
-            if (in_array($localName, $options['filenameExceptions'])) {
+            if (in_array($localName, $options['excludedFileNames'])) {
                 continue;
             }
 

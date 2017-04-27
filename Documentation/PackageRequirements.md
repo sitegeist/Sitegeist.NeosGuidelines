@@ -58,7 +58,7 @@ All `*.fusion`-files are validated by the following rules with the exception of:
   - `Root.fusion`
   - `Shame.fusion`
  
-Hint: This list can be altered with the Setting `packages.validators.Fusion.options.filenameExceptions`
+Hint: This list can be altered with the Setting `packages.validators.Fusion.options.excludedFileNames`
 
 1. All `*.fusion`-files define exactly one prototype
 
