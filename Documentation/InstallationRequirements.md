@@ -19,7 +19,7 @@ Source:
 
 ## Elastic Search
 
-For feast search in large Datasets with fulltext Indexing or complex Queries.
+For fast search in large Datasets with fulltext Indexing or complex Queries.
 
 Requirements:
 - Elasticsearch versions 2.0.x to 2.4.x
@@ -30,7 +30,7 @@ Source:
 
 ## Redis - Caching
 
-A caching backend which stores cache entries in Redis using the phpredis PHP extension.
+A caching-backend which stores cache entries in Redis using the phpredis PHP extension.
 Redis is a noSQL database with very good scaling characteristics
 in proportion to the amount of entries and data size.
 

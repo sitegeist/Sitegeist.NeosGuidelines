@@ -16,7 +16,7 @@ Sitegeist:
           validator: Sitegeist\NeosGuidelines\Validators\Distribution\MarkdownFileDistributionValidator
           options:
             fileName: 'README.md'
-            requiredSections: [ 'Installation', 'Versionskontrolle', 'Deployment']
+            requiredSections: [ 'Installation', 'Versioning', 'Deployment']
 
         Composer:
           validator: Sitegeist\NeosGuidelines\Validators\Distribution\ComposerFileDistributionValidator
@@ -52,4 +52,5 @@ Sitegeist:
         Fusion:
           validator: Sitegeist\NeosGuidelines\Validators\Package\FusionValidator
           options:
+            excludedFileNames: ['Root.fusion', 'Shame.fusion']
             allowedFusionPrefixes: ['Content', 'Document', 'Prototype', 'Component']
