@@ -17,15 +17,8 @@ by our employer http://www.sitegeist.de.*
 
 ## Installation
 
-Add this repository to your composer.json
-```
-    "repositories": [{
-        "url": "ssh://git@git.sitegeist.de:40022/sitegeist/Sitegeist.NeosGuidelines.git",
-        "type": "vcs"
-    }],
-```
-
-and run `composer require --dev sitegeist/neosguidelines`
+This package is available via Packagist. Run `composer require --dev sitegeist/neosguidelines` to install the 
++sitegeist NeosGuidelines as dev-dependency into your project. 
 
 ## Configuration
  
