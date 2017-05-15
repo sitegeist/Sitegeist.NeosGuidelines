@@ -10,9 +10,9 @@
             "role": "Developer"
         },
         {
-          "name": "Martin Ficzel",
-          "email": "ficzel@sitegeist.de",
-          "role": "Developer"
+            "name": "Martin Ficzel",
+            "email": "ficzel@sitegeist.de",
+            "role": "Developer"
         }
     ],
     "require": {
