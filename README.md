@@ -12,8 +12,8 @@ by our employer http://www.sitegeist.de.*
 
 ## Usage
 
-- `./flow guidelines:validateDistribution` - validates your neos/flow distribution against the sitegist-guidelines
-- `./flow guidelines:validatePackages` - validates your neos/flow packages against the sitegist-guidelines
+- `./flow guidelines:validateDistribution` - validates your neos/flow distribution against the sitegeist-guidelines
+- `./flow guidelines:validatePackages` - validates your neos/flow packages against the sitegeist-guidelines
 
 ## Installation
 
