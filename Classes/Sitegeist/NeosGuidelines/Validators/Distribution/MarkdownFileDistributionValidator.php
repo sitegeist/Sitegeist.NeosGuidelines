@@ -16,8 +16,16 @@ class MarkdownFileDistributionValidator extends AbstractDistributionValidator
     {
         $result = new Result();
         $file = $options['fileName'];
-        $fileContent = file_get_contents(FLOW_PATH_ROOT . $file);
+        $fileExists = file_exists(FLOW_PATH_ROOT . $file);
 
+        if (!$fileExists) {
+            $message = sprintf('No %s file found in %s', $file, FLOW_PATH_ROOT);
+            $result->addError(new Error($message));
+
+            return $result;
+        }
+
+        $fileContent = file_get_contents(FLOW_PATH_ROOT . $file);
 
         if ($options['requiredSections'] && is_array($options['requiredSections'])) {
             foreach ($options['requiredSections'] as $section) {
