@@ -29,10 +29,19 @@ class NodeTypeValidator extends AbstractPackageValidator
 
                 $configuration = Yaml::parse($configurationFile);
 
-                // Empty Configuration
+                // Missing NodeType configuration
                 if (empty($configuration)) {
                     $result->forProperty($name)->addError(new Error(sprintf(
-                        'NodeTypes file %s',
+                        'The NodeTypes file requires a node type "%s" to be configured.',
+                        $name
+                    )));
+                    continue;
+                }
+
+                // Empty Configuration
+                if (empty($configuration[array_keys($configuration)[0]])) {
+                    $result->forProperty($name)->addError(new Error(sprintf(
+                        'The NodeTypes definition is empty, it needs at least one configuration.',
                         $name
                     )));
                     continue;
