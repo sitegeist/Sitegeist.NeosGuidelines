@@ -27,7 +27,7 @@ class NodeTypeValidator extends AbstractPackageValidator
                 $name = substr($configurationFile, strlen($configurationPath . 'NodeTypes.'), -1 * strlen('.yaml'));
                 $nameParts = explode('.', $name);
 
-                $configuration = Yaml::parse($configurationFile);
+                $configuration = Yaml::parseFile($configurationFile);
 
                 // Empty Configuration
                 if (empty($configuration)) {
