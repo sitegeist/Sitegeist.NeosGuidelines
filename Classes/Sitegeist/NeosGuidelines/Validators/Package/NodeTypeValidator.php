@@ -29,10 +29,19 @@ class NodeTypeValidator extends AbstractPackageValidator
 
                 $configuration = Yaml::parse($configurationFile);
 
-                // Empty Configuration
+                // Missing NodeType configuration
                 if (empty($configuration)) {
                     $result->forProperty($name)->addError(new Error(sprintf(
-                        'NodeTypes file %s',
+                        'The NodeTypes file requires a node type "%s" to be configured.',
+                        $name
+                    )));
+                    continue;
+                }
+
+                // Empty Configuration
+                if (empty($configuration[array_keys($configuration)[0]])) {
+                    $result->forProperty($name)->addError(new Error(sprintf(
+                        'The NodeTypes definition is empty, it needs at least one configuration.',
                         $name
                     )));
                     continue;
@@ -41,7 +50,7 @@ class NodeTypeValidator extends AbstractPackageValidator
                 // One NodeType per NodeTypes.*.yaml
                 if (count($configuration) !== 1) {
                     $result->forProperty($name)->addError(new Error(sprintf(
-                        '%s NodeTypes found in file %s. Exactly one nodetype per file is expected',
+                        '"%s" NodeTypes found in file "%s". Exactly one nodetype per file is expected',
                         count($configuration),
                         $name
                     )));
@@ -52,7 +61,7 @@ class NodeTypeValidator extends AbstractPackageValidator
                 if (!empty($allowedNodeTypePrefixes)) {
                     if (!in_array($nameParts[0], $allowedNodeTypePrefixes)) {
                         $result->forProperty($name)->addError(new Error(sprintf(
-                            'NodeType %s in file %s does not start with one of those prefixes %s',
+                            'NodeType "%s" in file %s does not start with one of those prefixes %s',
                             $name,
                             $name,
                             implode(',', $allowedNodeTypePrefixes)
@@ -65,7 +74,7 @@ class NodeTypeValidator extends AbstractPackageValidator
                     $nodeTypeName = array_keys($configuration)[0];
                     if (strpos($package->getPackageKey(), $nodeTypeName) === 0) {
                         $result->forProperty($name)->addError(new Error(sprintf(
-                            'Override-NodeType %s in file %s should override NodeTypes in foreign package namespace.',
+                            'Override-NodeType "%s" in file "%s" should override NodeTypes in foreign package namespace.',
                             $nodeTypeName,
                             $name
                         )));
@@ -83,8 +92,7 @@ class NodeTypeValidator extends AbstractPackageValidator
                             || $nodeTypeConfiguration['abstract'] == false
                         ) {
                             $result->forProperty($name)->addError(new Error(sprintf(
-                                'NodeType %s with one of those prefixes %s have to be abstract',
-                                $name,
+                                'A NodeType with one of those prefixes %s has to be abstract.',
                                 implode(',', $abstractNodeTypePrefixes)
                             )));
                         }
@@ -95,7 +103,7 @@ class NodeTypeValidator extends AbstractPackageValidator
                 $expectedNodeType = $package->getPackageKey() . ':' . $name;
                 if (!array_key_exists($expectedNodeType, $configuration)) {
                     $result->forProperty($name)->addError(new Error(sprintf(
-                        'Expected NodeType %s in file %s but found %s',
+                        'Expected NodeType "%s" in file "%s", but found NodeType "%s"',
                         $expectedNodeType,
                         $name,
                         implode(',', array_keys($configuration))
