@@ -3,7 +3,7 @@ namespace Sitegeist\NeosGuidelines\Validators\Package;
 
 use Neos\Flow\Annotations as Flow;
 use Neos\Flow\Package\PackageInterface;
-use Neos\Flow\Package\PackageManagerInterface;
+use Neos\Flow\Package\PackageManager;
 use Neos\Error\Messages\Result;
 
 /**
@@ -15,7 +15,7 @@ abstract class AbstractPackageValidator
 
     /**
      * @Flow\Inject
-     * @var PackageManagerInterface
+     * @var PackageManager
      */
     protected $packageManager;
 
